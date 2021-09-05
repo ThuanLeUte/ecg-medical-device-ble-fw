@@ -1,25 +1,26 @@
 /**
- * @file       bsp_accelero.h
- * @copyright  Copyright (C) 2020 ThuanLe. All rights reserved.
- * @license    This project is released under the ThuanLe License.
+ * @file       bsp_bm.h
+ * @copyright  Copyright (C) 2020 Hydratech. All rights reserved.
+ * @license    This project is released under the Hydratech License.
  * @version    1.0.0
- * @date       2021-03-24
+ * @date       2021-05-09
  * @author     Thuan Le
- * @brief      Board support package for Accelerometer (MIS2DH)
+ * @brief      Board Support Package Battery Monitor
  * @note       None
  * @example    None
  */
 
 /* Define to prevent recursive inclusion ------------------------------ */
-#ifndef __BSP_ACCELERO_H
-#define __BSP_ACCELERO_H
+#ifndef __BSP_BM_H
+#define __BSP_BM_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Includes ----------------------------------------------------------- */
-#include "mis2dh.h"
+#include "ds2728.h"
+#include "bsp.h"
 
 /* Public defines ----------------------------------------------------- */
 /* Public enumerate/structure ----------------------------------------- */
@@ -27,7 +28,7 @@ extern "C" {
 /* Public variables --------------------------------------------------- */
 /* Public function prototypes ----------------------------------------- */
 /**
- * @brief         BSP Accelerometer sensor init
+ * @brief         BSP battery monitor init
  *
  * @param[in]     None
  *
@@ -37,25 +38,12 @@ extern "C" {
  * - BS_OK
  * - BS_ERROR
  */
-base_status_t bsp_accel_init(void);
-
-/**
- * @brief         BSP Accelerometer get raw data
- *
- * @param[in]     raw_data  Accelerometer raw data
- *
- * @attention     None
- *
- * @return
- * - BS_OK
- * - BS_ERROR
- */
-base_status_t bsp_accel_get_raw_data(mis2dh_raw_data_t *raw_data);
+base_status_t bsp_bm_init(void);
 
 /* -------------------------------------------------------------------------- */
 #ifdef __cplusplus
 } // extern "C"
 #endif
-#endif // __BSP_ACCELERO_H
+#endif // __BSP_BM_H
 
 /* End of file -------------------------------------------------------- */

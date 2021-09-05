@@ -1,7 +1,7 @@
 /**
  * @file       bsp.h
- * @copyright  Copyright (C) 2020 ThuanLe. All rights reserved.
- * @license    This project is released under the ThuanLe License.
+ * @copyright  Copyright (C) 2020 Hydratech. All rights reserved.
+ * @license    This project is released under the Hydratech License.
  * @version    1.0.0
  * @date       2021-01-23
  * @author     Thuan Le
@@ -120,6 +120,8 @@ int bsp_i2c_write(uint8_t slave_addr, uint8_t reg_addr, uint8_t *p_data, uint32_
  * - 1      Error
  */
 int bsp_i2c_read(uint8_t slave_addr, uint8_t reg_addr, uint8_t *p_data, uint32_t len);
+
+int bsp_spi_transmit_receive(uint8_t *tx_data, uint8_t *rx_data, uint16_t len);
 
 void bsp_delay_ms(uint32_t ms);
 

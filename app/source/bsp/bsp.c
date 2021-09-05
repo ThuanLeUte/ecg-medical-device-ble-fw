@@ -1,8 +1,8 @@
 
 /**
  * @file       bsp.c
- * @copyright  Copyright (C) 2020 ThuanLe. All rights reserved.
- * @license    This project is released under the ThuanLe License.
+ * @copyright  Copyright (C) 2020 Hydratech. All rights reserved.
+ * @license    This project is released under the Hydratech License.
  * @version    1.0.0
  * @date       2021-01-23
  * @author     Thuan Le
@@ -27,12 +27,14 @@ static nrf_drv_twi_t m_twi = NRF_DRV_TWI_INSTANCE(TWI_INSTANCE);
 /* Private function prototypes ---------------------------------------- */
 static void m_bsp_i2c_init(void);
 static void m_bsp_gpio_init(void);
+static void m_bsp_spi_init(void);
 
 /* Function definitions ----------------------------------------------- */
 void bsp_hw_init(void)
 {
   m_bsp_i2c_init();
   m_bsp_gpio_init();
+  m_bsp_spi_init();
 }
 
 int bsp_i2c_write(uint8_t slave_addr, uint8_t reg_addr, uint8_t *p_data, uint32_t len)
@@ -50,6 +52,12 @@ int bsp_i2c_read(uint8_t slave_addr, uint8_t reg_addr, uint8_t *p_data, uint32_t
   nrf_drv_twi_tx(&m_twi, slave_addr, (uint8_t *)&reg_addr, 1, true);
 
   return nrf_drv_twi_rx(&m_twi, slave_addr, p_data, len);
+}
+
+int bsp_spi_transmit_receive(uint8_t *tx_data, uint8_t *rx_data, uint16_t len)
+{
+
+	return 0;
 }
 
 void bsp_delay_ms(uint32_t ms)
@@ -95,6 +103,20 @@ static void m_bsp_i2c_init(void)
 }
 
 /**
+ * @brief         SPI init
+ *
+ * @param[in]     None
+ *
+ * @attention     None
+ *
+ * @return        None
+ */
+static void m_bsp_spi_init(void)
+{
+
+}
+
+/**
  * @brief         Gpio init
  *
  * @param[in]     None
@@ -109,13 +131,6 @@ static void m_bsp_gpio_init(void)
 
   err_code = nrf_drv_gpiote_init();
   APP_ERROR_CHECK(err_code);
-
-  // LCD pin config
-  nrf_drv_gpiote_out_config_t out_config = NRFX_GPIOTE_CONFIG_OUT_TASK_TOGGLE(true);
-  err_code = nrf_drv_gpiote_out_init(IO_MOTOR_VIBRATION, &out_config);
-  APP_ERROR_CHECK(err_code);
-
-  nrfx_gpiote_out_set(IO_MOTOR_VIBRATION);
 }
 
 /* End of file -------------------------------------------------------- */

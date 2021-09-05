@@ -1,26 +1,25 @@
 /**
- * @file       sys_bm.h
- * @copyright  Copyright (C) 2020 ThuanLe. All rights reserved.
- * @license    This project is released under the ThuanLe License.
+ * @file       bsp_afe.h
+ * @copyright  Copyright (C) 2020 Hydratech. All rights reserved.
+ * @license    This project is released under the Hydratech License.
  * @version    1.0.0
- * @date       2021-01-24
+ * @date       2021-09-05
  * @author     Thuan Le
- * @brief      System module to handle Battery Monitor (BM)
+ * @brief      Board Support Package for AFE (ADS1293)
  * @note       None
  * @example    None
  */
 
 /* Define to prevent recursive inclusion ------------------------------ */
-#ifndef _SYS_BATT_H
-#define _SYS_BATT_H
+#ifndef __BSP_AFE_H
+#define __BSP_AFE_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Includes ----------------------------------------------------------- */
-#include <stdint.h>
-#include <stdbool.h>
+#include "ads1293.h"
 
 /* Public defines ----------------------------------------------------- */
 /* Public enumerate/structure ----------------------------------------- */
@@ -28,42 +27,22 @@ extern "C" {
 /* Public variables --------------------------------------------------- */
 /* Public function prototypes ----------------------------------------- */
 /**
- * @brief         Battery monitor init
+ * @brief         BSP AFE init
  *
  * @param[in]     None
  *
  * @attention     None
  *
- * @return        None
+ * @return
+ * - BS_OK
+ * - BS_ERROR
  */
-void sys_bm_init(void);
-
-/**
- * @brief         Battery monitor get value
- *
- * @param[in]     p_vbat       Pointer to battery voltage in mV
- *
- * @attention     None
- *
- * @return        None
- */
-void sys_bm_get(uint16_t * p_vbatt);
-
-/**
- * @brief         Battery monitor get level in percent
- *
- * @param[in]     batt_level    Pointer to battery level in percent
- *
- * @attention     None
- *
- * @return        None
- */
-void sys_bm_get_level_in_percent(uint8_t *batt_level);
+base_status_t bsp_afe_init(void);
 
 /* -------------------------------------------------------------------------- */
 #ifdef __cplusplus
 } // extern "C"
 #endif
-#endif // _SYS_BATT_H
+#endif // __BSP_AFE_H
 
 /* End of file -------------------------------------------------------- */

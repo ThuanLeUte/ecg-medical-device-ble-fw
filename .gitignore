@@ -53,7 +53,7 @@ Mkfile.old
 dkms.conf
 
 
-# Adding by ThuanLe
+# Adding by Hydratech
 # Compiled Object files
 *.slo
 *.lo

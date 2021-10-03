@@ -21,13 +21,56 @@
 static ads1293_t m_ads1293;
 
 /* Private function prototypes ---------------------------------------- */
+static base_status_t m_bsp_afe_read_channels(float value[ADS_NUM_CHANNEL]);
+
 /* Function definitions ----------------------------------------------- */
 base_status_t bsp_afe_init(void)
 {
   m_ads1293.spi_transmit_receive = bsp_spi_transmit_receive;
 
+  CHECK_STATUS(ads1293_init(&m_ads1293));
+
+  CHECK_STATUS(ads1293_start_convert(&m_ads1293));
+
   return BS_OK;
 }
 
+base_status_t bsp_afe_read_ecg(void)
+{
+  float signal_val[ADS_NUM_CHANNEL];
+
+  m_bsp_afe_read_channels(signal_val);
+}
+
 /* Private function definitions ---------------------------------------- */
+/**
+ * @brief         AFE read channel data
+ *
+ * @param[in]     value   AEF data
+ *
+ * @attention     None
+ *
+ * @return
+ * - BS_OK
+ * - BS_ERROR
+ */
+static base_status_t m_bsp_afe_read_channels(float value[ADS_NUM_CHANNEL])
+{
+  uint8_t r[ADS_NUM_CHANNEL * 3];
+  int32_t i[ADS_NUM_CHANNEL];
+
+  CHECK_STATUS(ads1293_read_ecg(&m_ads1293, r));
+
+  for (int k = 0; k < ADS_NUM_CHANNEL; k++)
+  {
+    // Compose int32_t value
+    i[k] = (int32_t)((r[3 * k] << 24) | (r[3 * k + 1] << 16) | r[3 * k + 2] << 8) >> 8;
+
+    // Convert int32_t to float
+    value[k] = (float)i[k];
+  }
+
+  return BS_OK;
+}
+
 /* End of file -------------------------------------------------------- */

@@ -1,61 +1,45 @@
 /**
- * @file       bsp_afe.h
+ * @file       it_callback.h
  * @copyright  Copyright (C) 2020 Hydratech. All rights reserved.
  * @license    This project is released under the Hydratech License.
  * @version    1.0.0
- * @date       2021-09-05
+ * @date       2021-01-23
  * @author     Thuan Le
- * @brief      Board Support Package for AFE (ADS1293)
+ * @brief      Interrupt callback
  * @note       None
  * @example    None
  */
 
 /* Define to prevent recursive inclusion ------------------------------ */
-#ifndef __BSP_AFE_H
-#define __BSP_AFE_H
+#ifndef __IT_CALLBACK_H
+#define __IT_CALLBACK_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Includes ----------------------------------------------------------- */
-#include "ads1293.h"
-
 /* Public defines ----------------------------------------------------- */
 /* Public enumerate/structure ----------------------------------------- */
 /* Public macros ------------------------------------------------------ */
 /* Public variables --------------------------------------------------- */
 /* Public function prototypes ----------------------------------------- */
 /**
- * @brief         BSP AFE init
+ * @brief         AFE data ready interrup
  *
- * @param[in]     None
- *
- * @attention     None
- *
- * @return
- * - BS_OK
- * - BS_ERROR
- */
-base_status_t bsp_afe_init(void);
-
-/**
- * @brief         BSP AFE read ECG data - Will be called in the interrupt handler - DRDY pin
- *
- * @param[in]     None
+ * @param[in]     pin       Interrupt pin
+ * @param[in]     action    Interrupt action
  *
  * @attention     None
  *
- * @return
- * - BS_OK
- * - BS_ERROR
+ * @return        None
  */
-base_status_t bsp_afe_read_ecg(void);
+void exint_afe_drdy_event_handler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t action);
 
 /* -------------------------------------------------------------------------- */
 #ifdef __cplusplus
 } // extern "C"
 #endif
-#endif // __BSP_AFE_H
+#endif // __IT_CALLBACK_H
 
 /* End of file -------------------------------------------------------- */

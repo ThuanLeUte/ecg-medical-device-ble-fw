@@ -50,7 +50,7 @@ base_status_t bsp_afe_init(void);
  * - BS_OK
  * - BS_ERROR
  */
-base_status_t bsp_afe_read_ecg(void);
+base_status_t bsp_afe_get_ecg(void);
 
 /* -------------------------------------------------------------------------- */
 #ifdef __cplusplus

@@ -1,5 +1,5 @@
 /**
- * @file       ble_acs.c
+ * @file       ble_ecg.c
  * @copyright  Copyright (C) 2020 Hydratech. All rights reserved.
  * @license    This project is released under the Hydratech License.
  * @version    1.0.0
@@ -13,7 +13,7 @@
 /* Includes ----------------------------------------------------------- */
 #include "sdk_common.h"
 #include "ble.h"
-#include "ble_acs.h"
+#include "ble_ecg.h"
 #include "ble_srv_common.h"
 #include "nrf_log.h"
 

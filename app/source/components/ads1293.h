@@ -19,7 +19,7 @@ extern "C" {
 #endif
 
 /* Includes ----------------------------------------------------------- */
-#include "bsp.h"
+#include "bsp/bsp.h"
 
 /* Public defines ----------------------------------------------------- */
 #define ADS_NUM_CHANNEL   (3)

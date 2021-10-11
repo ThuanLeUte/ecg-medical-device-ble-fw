@@ -33,7 +33,7 @@
 #include "bsp/bsp.h"
 #include "ble_bas.h"
 #include "ble_dis.h"
-#include "ble_acs.h"
+#include "ble/ble_ecg.h"
 #include "bsp.h"
 #include "nrf52832_peripherals.h"
 

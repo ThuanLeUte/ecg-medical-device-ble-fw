@@ -12,7 +12,7 @@
 
 /* Includes ----------------------------------------------------------- */
 #include "ads1293.h"
-#include "nrf_log.h"
+#include "ads1293_def.h"
 
 /* Private defines ---------------------------------------------------- */
 /* Private enumerate/structure ---------------------------------------- */
@@ -30,9 +30,9 @@ base_status_t ads1293_init(ads1293_t *me)
     return BS_ERROR;
 
   // Write init setting
-  for (uint8_t i = 0; i < sizeof(ADS1293_SETTING_LIST), i++)
+  for (uint8_t i = 0; i < sizeof(ADS1293_SETTING_LIST); i++)
   {
-    CHECK_STATUS(m_ads1293_write_reg(me, ADS1293_SETTING_LIST[i].register, ADS1293_SETTING_LIST[i].value));
+    CHECK_STATUS(m_ads1293_write_reg(me, ADS1293_SETTING_LIST[i].reg, ADS1293_SETTING_LIST[i].value));
   }
 
   return BS_OK;
@@ -63,7 +63,7 @@ base_status_t ads1293_read_ecg(ads1293_t *me, uint8_t *data)
  * - BS_OK
  * - BS_ERROR
  */
-static base_status_t m_ads1293_read(ads1293_t *me, uint8_t reg, uint8_t *p_data, uint32_t len)
+static base_status_t m_ads1293_read_reg(ads1293_t *me, uint8_t reg, uint8_t *p_data, uint32_t len)
 {
   CHECK(0 == me->spi_transmit_receive(&reg, NULL, 1), BS_ERROR);
   CHECK(0 == me->spi_transmit_receive(NULL, p_data, len), BS_ERROR);
@@ -84,10 +84,10 @@ static base_status_t m_ads1293_read(ads1293_t *me, uint8_t reg, uint8_t *p_data,
  * - BS_OK
  * - BS_ERROR
  */
-static base_status_t m_ads1293_write(ads1293_t *me, uint8_t reg, uint8_t data)
+static base_status_t m_ads1293_write_reg(ads1293_t *me, uint8_t reg, uint8_t data)
 {
   CHECK(0 == me->spi_transmit_receive(&reg, NULL, 1), BS_ERROR);
-  CHECK(0 == me->spi_transmit_receive(&data, NULL, len), BS_ERROR);
+  CHECK(0 == me->spi_transmit_receive(&data, NULL, 1), BS_ERROR);
 
   return BS_OK;
 }

@@ -30,16 +30,18 @@ base_status_t bsp_afe_init(void)
 
   CHECK_STATUS(ads1293_init(&m_ads1293));
 
-  CHECK_STATUS(ads1293_start_convert(&m_ads1293));
+  CHECK_STATUS(ads1293_start_convert(&m_ads1293, BS_TRUE));
 
   return BS_OK;
 }
 
-base_status_t bsp_afe_read_ecg(void)
+base_status_t bsp_afe_get_ecg(void)
 {
   float signal_val[ADS_NUM_CHANNEL];
 
   m_bsp_afe_read_channels(signal_val);
+
+  return BS_OK;
 }
 
 /* Private function definitions ---------------------------------------- */

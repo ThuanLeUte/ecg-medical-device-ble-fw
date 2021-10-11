@@ -14,10 +14,11 @@
 
 /* Includes ----------------------------------------------------------- */
 #include "bsp.h"
+#include "it_callback.h"
 
 /* Private defines ---------------------------------------------------- */
 #define TWI_INSTANCE         0
-#define SPI_INSTANCE         0
+#define SPI_INSTANCE         1
 
 /* Private enumerate/structure ---------------------------------------- */
 static nrf_drv_twi_t m_twi = NRF_DRV_TWI_INSTANCE(TWI_INSTANCE);

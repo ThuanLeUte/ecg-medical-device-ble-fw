@@ -89,13 +89,13 @@ extern "C" {
  */
 typedef struct 
 {
-  uint8_t register;
-  uitt8_t value;
+  uint8_t reg;
+  uint8_t value;
 }
 ads1293_seting_t;
 
 /* Private variables -------------------------------------------------- */
-#define INFO(_register, _value)[_register] = { .register = _register, .value = _value }
+#define INFO(_register, _value)[_register] = { .reg = _register, .value = _value }
 const ads1293_seting_t ADS1293_SETTING_LIST[] =
 {
    //  +===============================+=======+

@@ -30,7 +30,7 @@ static base_status_t m_ads1293_write_reg(ads1293_t *me, uint8_t reg, uint8_t dat
 /* Function definitions ----------------------------------------------- */
 base_status_t ads1293_init(ads1293_t *me)
 {
-  if ((me == NULL) || (me->spi_transmit_receive == NULL) || (me->gpio_write == NULL))
+  if ((me == NULL) || (me->spi_transmit_receive == NULL))
     return BS_ERROR;
 
     m_ads1293_read_reg(me, ADS1293_REG_ALARM_FILTER, &revision_id, 1);

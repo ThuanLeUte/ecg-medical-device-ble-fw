@@ -62,16 +62,11 @@ int bsp_i2c_read(uint8_t slave_addr, uint8_t reg_addr, uint8_t *p_data, uint32_t
 int bsp_spi_transmit_receive(uint8_t *tx_data, uint8_t *rx_data, uint16_t len)
 {
   data_ready = BS_FALSE;
-  // bsp_gpio_write(IO_AFE_CS, 0);
-  // nrf_delay_ms(10);
 
   nrf_drv_spi_transfer(&m_spi, tx_data, len, rx_data, len);
   while (!data_ready)
   {
   }
-  // nrf_delay_ms(10);
-  // bsp_gpio_write(IO_AFE_CS, 1);
-
   
   return BS_OK;
 }
@@ -163,17 +158,17 @@ static void m_bsp_gpio_init(void)
   err_code = nrf_drv_gpiote_init();
   APP_ERROR_CHECK(err_code);
 
-  // AFE ready config pin
-  nrf_drv_gpiote_in_config_t in_config = GPIOTE_CONFIG_IN_SENSE_HITOLO(true);
-  in_config.pull = NRF_GPIO_PIN_PULLUP;
+  // // AFE ready config pin
+  // nrf_drv_gpiote_in_config_t in_config = GPIOTE_CONFIG_IN_SENSE_HITOLO(true);
+  // in_config.pull = NRF_GPIO_PIN_PULLUP;
 
-  err_code = nrf_drv_gpiote_in_init(IO_AFE_DRDY, &in_config, exint_afe_drdy_event_handler);
-  APP_ERROR_CHECK(err_code);
+  // err_code = nrf_drv_gpiote_in_init(IO_AFE_DRDY, &in_config, exint_afe_drdy_event_handler);
+  // APP_ERROR_CHECK(err_code);
+  // nrf_drv_gpiote_in_event_enable(IO_AFE_DRDY, true);
 
-  nrf_drv_gpiote_in_event_enable(IO_AFE_DRDY, true);
+  nrf_gpio_cfg_input(IO_AFE_DRDY, NRF_GPIO_PIN_PULLUP);
 
-   nrf_drv_gpiote_out_config_t out_config = NRFX_GPIOTE_CONFIG_OUT_TASK_TOGGLE(true);
-  // err_code = nrf_drv_gpiote_out_init(IO_AFE_CS, &out_config);
+  // Output in setting
   nrf_gpio_cfg_output(IO_AFE_CS);
   bsp_gpio_write(IO_AFE_CS, 0);
 

@@ -130,15 +130,6 @@ int main(void)
 {
   // Initialize.
   log_init();
-  bsp_hw_init(); // Bsp init
-  
-  while (1)
-  {
-    bsp_afe_init();
-    nrf_delay_ms(2000);
-    bsp_hw_init(); // Bsp init
-  }
-
   timers_init();
   power_management_init();
   ble_stack_init();
@@ -148,18 +139,26 @@ int main(void)
   advertising_init();
   conn_params_init();
 
+  bsp_hw_init(); // Bsp init
+
+  bsp_afe_init();
+
   bsp_bm_init();
 
   float temp;
   bsp_bm_temperature(&temp);
 
-  bsp_afe_init();
-
   // Start execution.
   application_timers_start();
   advertising_start();
 
-  
+  while (1)
+  {
+    if (nrf_gpio_pin_read(IO_AFE_DRDY) == false)
+    {
+      bsp_afe_get_ecg();
+    }
+  }
 
   for (;;)
   {

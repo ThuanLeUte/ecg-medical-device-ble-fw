@@ -15,9 +15,9 @@
 #include "ads1293_def.h"
 
 /* Private defines ---------------------------------------------------- */
-#define ADS1293_READ_BIT                              (0x80)
-#define ADS1293_WRITE_BIT                             (0x7F)
-uint8_t revision_id;
+#define ADS1293_READ_BIT              (0x80)
+#define ADS1293_WRITE_BIT             (0x7F)
+#define ADS1293_REVID_VALUE           (0x01)
 
 /* Private enumerate/structure ---------------------------------------- */
 /* Private macros ----------------------------------------------------- */
@@ -30,40 +30,22 @@ static base_status_t m_ads1293_write_reg(ads1293_t *me, uint8_t reg, uint8_t dat
 /* Function definitions ----------------------------------------------- */
 base_status_t ads1293_init(ads1293_t *me)
 {
+  uint8_t revision_id;
+
   if ((me == NULL) || (me->spi_transmit_receive == NULL) || (me->gpio_write == NULL))
     return BS_ERROR;
 
-    m_ads1293_read_reg(me, ADS1293_REG_ALARM_FILTER, &revision_id, 1);
-    m_ads1293_read_reg(me, ADS1293_REG_LOD_CN, &revision_id, 1);
-    bsp_delay_ms(1000);
-    m_ads1293_read_reg(me, ADS1293_REG_CONFIG, &revision_id, 1);
+  CHECK_STATUS(m_ads1293_read_reg(me, ADS1293_REG_REVID, &revision_id, 1));
 
-	NRF_LOG_ERROR("Revision: %d", revision_id);
-  if (0x01 == revision_id)
-  {
-    NRF_LOG_ERROR("OK");
-  }
-  else 
-  {
-    NRF_LOG_ERROR("ERROR");
-  }
+  NRF_LOG_ERROR("Revision ID: %d", revision_id);
+  if (ADS1293_REVID_VALUE != revision_id)
+    return BS_ERROR;
 
   // Write init setting
-  // for (uint8_t i = 0; i < (sizeof(ADS1293_SETTING_LIST) / sizeof(ADS1293_SETTING_LIST[0])); i++)
-  // for (uint8_t i = 0; i < 22; i++)
-  // {
-  //   m_ads1293_write_reg(me, ADS1293_SETTING_LIST[i].reg, ADS1293_SETTING_LIST[i].value);
-  //   m_ads1293_read_reg(me, ADS1293_SETTING_LIST[i].reg, &revision_id, 1);
-
-  //   if (revision_id == ADS1293_SETTING_LIST[i].value)
-  //   {
-  //        NRF_LOG_ERROR("OK");
-  //   }
-  //   else
-  //   {
-  //       NRF_LOG_ERROR("ERROR");
-  //   }
-  // }
+  for (uint8_t i = 0; i < (sizeof(ADS1293_SETTING_LIST) / sizeof(ADS1293_SETTING_LIST[0])); i++)
+  {
+    CHECK_STATUS(m_ads1293_write_reg(me, ADS1293_SETTING_LIST[i].reg, ADS1293_SETTING_LIST[i].value));
+  }
 
   return BS_OK;
 }
@@ -95,17 +77,16 @@ base_status_t ads1293_read_ecg(ads1293_t *me, uint8_t *data)
  */
 static base_status_t m_ads1293_read_reg(ads1293_t *me, uint8_t reg, uint8_t *p_data, uint32_t len)
 {
-  uint8_t data = 0;
-  bsp_gpio_write(IO_AFE_CS, 0);
+  // Pull CS pin to LOW
+  me->gpio_write(IO_AFE_CS, 0);
 
   reg = reg | ADS1293_READ_BIT;
+
   CHECK(0 == me->spi_transmit_receive(&reg, NULL, 1), BS_ERROR);
   CHECK(0 == me->spi_transmit_receive(NULL, p_data, len), BS_ERROR);
-  // me->spi_transmit_receive(&reg, NULL, 1);
-  // // bsp_delay_ms(1);
-  // me->spi_transmit_receive(NULL, p_data, 1);
-  // // me->spi_transmit_receive(NULL, p_data, len);
-  bsp_gpio_write(IO_AFE_CS, 1);
+
+  // Pull CS pin to HIGH
+  me->gpio_write(IO_AFE_CS, 1);
 
   return BS_OK;
 }
@@ -125,12 +106,16 @@ static base_status_t m_ads1293_read_reg(ads1293_t *me, uint8_t reg, uint8_t *p_d
  */
 static base_status_t m_ads1293_write_reg(ads1293_t *me, uint8_t reg, uint8_t data)
 {
+  // Pull CS pin to LOW
+  me->gpio_write(IO_AFE_CS, 0);
+
   reg = reg & ADS1293_WRITE_BIT;
-  // CHECK(0 == me->spi_transmit_receive(&reg, NULL, 1), BS_ERROR);
-  // CHECK(0 == me->spi_transmit_receive(&data, NULL, 1), BS_ERROR);
-  
-  me->spi_transmit_receive(&reg, NULL, 1);
-  me->spi_transmit_receive(&data, NULL, 1);
+
+  CHECK(0 == me->spi_transmit_receive(&reg, NULL, 1), BS_ERROR);
+  CHECK(0 == me->spi_transmit_receive(&data, NULL, 1), BS_ERROR);
+
+  // Pull CS pin to HIGH
+  me->gpio_write(IO_AFE_CS, 1);
 
   return BS_OK;
 }

@@ -62,16 +62,11 @@ int bsp_i2c_read(uint8_t slave_addr, uint8_t reg_addr, uint8_t *p_data, uint32_t
 int bsp_spi_transmit_receive(uint8_t *tx_data, uint8_t *rx_data, uint16_t len)
 {
   data_ready = BS_FALSE;
-  // bsp_gpio_write(IO_AFE_CS, 0);
-  // nrf_delay_ms(10);
 
   nrf_drv_spi_transfer(&m_spi, tx_data, len, rx_data, len);
-  while (!data_ready)
+ // while (!data_ready)
   {
   }
-  // nrf_delay_ms(10);
-  // bsp_gpio_write(IO_AFE_CS, 1);
-
   
   return BS_OK;
 }
@@ -83,7 +78,7 @@ void bsp_delay_ms(uint32_t ms)
 
 void bsp_gpio_write(uint8_t pin , uint8_t state)
 {
-    nrf_gpio_pin_write(pin, state);
+  nrf_gpio_pin_write(pin, state);
 }
 
 /* Private function definitions ---------------------------------------- */
@@ -115,8 +110,7 @@ static void m_bsp_i2c_init(void)
   nrf_drv_twi_enable(&m_twi);
 }
 
-void spi_event_handler(nrf_drv_spi_evt_t const * p_event,
-                       void *                    p_context)
+void spi_event_handler(nrf_drv_spi_evt_t const *p_event, void *p_context)
 {
   data_ready = BS_TRUE;
 }
@@ -136,7 +130,6 @@ static void m_bsp_spi_init(void)
 
   nrf_drv_spi_config_t spi_config = NRF_DRV_SPI_DEFAULT_CONFIG;
 
-  // spi_config.ss_pin    = IO_AFE_CS;
   spi_config.mosi_pin  = IO_AFE_MOSI;
   spi_config.miso_pin  = IO_AFE_MISO;
   spi_config.sck_pin   = IO_AFE_SCLK;
@@ -172,8 +165,6 @@ static void m_bsp_gpio_init(void)
 
   nrf_drv_gpiote_in_event_enable(IO_AFE_DRDY, true);
 
-   nrf_drv_gpiote_out_config_t out_config = NRFX_GPIOTE_CONFIG_OUT_TASK_TOGGLE(true);
-  // err_code = nrf_drv_gpiote_out_init(IO_AFE_CS, &out_config);
   nrf_gpio_cfg_output(IO_AFE_CS);
   bsp_gpio_write(IO_AFE_CS, 0);
 

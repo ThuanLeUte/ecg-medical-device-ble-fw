@@ -27,10 +27,11 @@ static base_status_t m_bsp_afe_read_channels(float value[ADS_NUM_CHANNEL]);
 base_status_t bsp_afe_init(void)
 {
   m_ads1293.spi_transmit_receive = bsp_spi_transmit_receive;
+  m_ads1293.gpio_write           = bsp_gpio_write;
 
   CHECK_STATUS(ads1293_init(&m_ads1293));
 
-  // CHECK_STATUS(ads1293_start_convert(&m_ads1293, BS_TRUE));
+  CHECK_STATUS(ads1293_start_convert(&m_ads1293, BS_TRUE));
 
   return BS_OK;
 }

@@ -33,5 +33,12 @@ base_status_t bsp_bm_init(void)
   return BS_OK;
 }
 
+base_status_t bsp_bm_temperature(float *temp)
+{
+  CHECK_STATUS(ds2728_get_temperature(&m_ds2728, temp));
+
+  return BS_OK;
+}
+
 /* Private function definitions ---------------------------------------- */
 /* End of file -------------------------------------------------------- */

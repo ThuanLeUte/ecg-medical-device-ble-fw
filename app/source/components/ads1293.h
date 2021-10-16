@@ -42,6 +42,8 @@ ads1293_axis_enable_t;
  */
 typedef struct 
 {
+  void (*gpio_write) (uint8_t pin , uint8_t state);
+
   int (*spi_transmit_receive)(uint8_t *tx_data, uint8_t *rx_data, uint16_t len);
 }
 ads1293_t;

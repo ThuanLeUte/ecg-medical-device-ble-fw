@@ -36,6 +36,8 @@
 #include "ble/ble_ecg.h"
 #include "bsp.h"
 #include "nrf52832_peripherals.h"
+#include "bsp/bsp_afe.h"
+#include "bsp/bsp_bm.h"
 
 #if defined(UART_PRESENT)
 #include "nrf_uart.h"
@@ -128,6 +130,15 @@ int main(void)
 {
   // Initialize.
   log_init();
+  bsp_hw_init(); // Bsp init
+  
+  while (1)
+  {
+    bsp_afe_init();
+    nrf_delay_ms(2000);
+    bsp_hw_init(); // Bsp init
+  }
+
   timers_init();
   power_management_init();
   ble_stack_init();
@@ -137,12 +148,18 @@ int main(void)
   advertising_init();
   conn_params_init();
 
-//  bsp_hw_init();          // Bsp init
-//  sys_bm_init();          // Battery monitor init
+  bsp_bm_init();
+
+  float temp;
+  bsp_bm_temperature(&temp);
+
+  bsp_afe_init();
 
   // Start execution.
   application_timers_start();
   advertising_start();
+
+  
 
   for (;;)
   {
@@ -821,6 +838,8 @@ static void battery_level_update(void)
  */
 static void sensors_value_update(void)
 {
+  // bsp_afe_get_ecg();
+  // bsp_afe_init();
 }
 
 /**

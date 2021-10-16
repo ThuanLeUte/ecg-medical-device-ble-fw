@@ -40,6 +40,8 @@ extern "C" {
  */
 base_status_t bsp_bm_init(void);
 
+base_status_t bsp_bm_temperature(float *temp);
+
 /* -------------------------------------------------------------------------- */
 #ifdef __cplusplus
 } // extern "C"

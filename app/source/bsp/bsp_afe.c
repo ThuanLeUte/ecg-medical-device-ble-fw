@@ -30,7 +30,7 @@ base_status_t bsp_afe_init(void)
 
   CHECK_STATUS(ads1293_init(&m_ads1293));
 
-  CHECK_STATUS(ads1293_start_convert(&m_ads1293, BS_TRUE));
+  // CHECK_STATUS(ads1293_start_convert(&m_ads1293, BS_TRUE));
 
   return BS_OK;
 }

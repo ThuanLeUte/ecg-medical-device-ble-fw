@@ -35,11 +35,9 @@ base_status_t bsp_afe_init(void)
   return BS_OK;
 }
 
-base_status_t bsp_afe_get_ecg(void)
+base_status_t bsp_afe_get_ecg(float value[ADS_NUM_CHANNEL])
 {
-  float signal_val[ADS_NUM_CHANNEL];
-
-  m_bsp_afe_read_channels(signal_val);
+  m_bsp_afe_read_channels(value);
 
   return BS_OK;
 }

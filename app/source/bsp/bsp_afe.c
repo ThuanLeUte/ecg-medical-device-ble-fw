@@ -21,7 +21,7 @@
 static ads1293_t m_ads1293;
 
 /* Private function prototypes ---------------------------------------- */
-static base_status_t m_bsp_afe_read_channels(float value[ADS_NUM_CHANNEL]);
+static base_status_t m_bsp_afe_read_channels(int16_t value[ADS_NUM_CHANNEL]);
 
 /* Function definitions ----------------------------------------------- */
 base_status_t bsp_afe_init(void)
@@ -35,7 +35,7 @@ base_status_t bsp_afe_init(void)
   return BS_OK;
 }
 
-base_status_t bsp_afe_get_ecg(float value[ADS_NUM_CHANNEL])
+base_status_t bsp_afe_get_ecg(int16_t value[ADS_NUM_CHANNEL])
 {
   m_bsp_afe_read_channels(value);
 
@@ -54,7 +54,7 @@ base_status_t bsp_afe_get_ecg(float value[ADS_NUM_CHANNEL])
  * - BS_OK
  * - BS_ERROR
  */
-static base_status_t m_bsp_afe_read_channels(float value[ADS_NUM_CHANNEL])
+static base_status_t m_bsp_afe_read_channels(int16_t value[ADS_NUM_CHANNEL])
 {
   uint8_t r[ADS_NUM_CHANNEL * 3];
   int32_t i[ADS_NUM_CHANNEL];
@@ -64,10 +64,10 @@ static base_status_t m_bsp_afe_read_channels(float value[ADS_NUM_CHANNEL])
   for (int k = 0; k < ADS_NUM_CHANNEL; k++)
   {
     // Compose int32_t value
-    i[k] = (int32_t)((r[3 * k] << 24) | (r[3 * k + 1] << 16) | r[3 * k + 2] << 8) >> 8;
+    i[k] = (int32_t)((r[3 * k] << 16) | (r[3 * k + 1] << 8) | r[3 * k + 2]);
 
     // Convert int32_t to float
-    value[k] = (float)i[k];
+    value[k] = (int16_t)i[k];
   }
 
   return BS_OK;

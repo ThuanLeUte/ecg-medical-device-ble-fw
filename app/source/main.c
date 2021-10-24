@@ -152,7 +152,7 @@ int main(void)
   application_timers_start();
   advertising_start();
 
-  float signal_val[ADS_NUM_CHANNEL];
+  int16_t signal_val[ADS_NUM_CHANNEL];
 
   while (1)
   {
@@ -160,9 +160,9 @@ int main(void)
     {
       bsp_afe_get_ecg(signal_val);
 
-      ble_ecg_update(&m_ecg, (uint16_t)signal_val[0], BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_1_CHAR);
-      ble_ecg_update(&m_ecg, (uint16_t)signal_val[1], BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_2_CHAR);
-      ble_ecg_update(&m_ecg, (uint16_t)signal_val[2], BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_3_CHAR);
+      ble_ecg_update(&m_ecg, (uint8_t *)&signal_val[0], sizeof(signal_val[0]), BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_1_CHAR);
+      ble_ecg_update(&m_ecg, (uint8_t *)&signal_val[1], sizeof(signal_val[1]), BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_2_CHAR);
+      ble_ecg_update(&m_ecg, (uint8_t *)&signal_val[2], sizeof(signal_val[2]), BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_3_CHAR);
     }
 
     bsp_delay_ms(2000);

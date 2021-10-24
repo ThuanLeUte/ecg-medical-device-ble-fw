@@ -81,7 +81,9 @@ uint32_t ble_ecg_init(ble_ecg_t *p_ecg, ble_ecg_init_t const *p_ecg_init)
   return m_ble_ecg_add_char(p_ecg, p_ecg_init, BLE_ECG_CHANNEL_3_CHAR);
 }
 
-ret_code_t ble_ecg_update(ble_ecg_t *p_ecg, uint16_t ecg, uint16_t conn_handle, ble_ecg_charaterictic_t charac)
+ret_code_t ble_ecg_update(ble_ecg_t *p_ecg, uint8_t *ecg,
+                          uint16_t len, uint16_t conn_handle,
+                          ble_ecg_charaterictic_t charac)
 {
   ret_code_t err_code;
 
@@ -89,9 +91,6 @@ ret_code_t ble_ecg_update(ble_ecg_t *p_ecg, uint16_t ecg, uint16_t conn_handle, 
   if (conn_handle != BLE_CONN_HANDLE_INVALID)
   {
     ble_gatts_hvx_params_t hvx_params;
-    uint16_t               len;
-
-    len = sizeof(ecg);
 
     memset(&hvx_params, 0, sizeof(hvx_params));
 
@@ -99,7 +98,7 @@ ret_code_t ble_ecg_update(ble_ecg_t *p_ecg, uint16_t ecg, uint16_t conn_handle, 
     hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;
     hvx_params.offset = 0;
     hvx_params.p_len  = &len;
-    hvx_params.p_data = (uint8_t *)&ecg;
+    hvx_params.p_data = ecg;
 
     if (conn_handle == BLE_CONN_HANDLE_ALL)
     {
@@ -165,8 +164,8 @@ static ret_code_t m_ble_ecg_add_char(ble_ecg_t *p_ecg, const ble_ecg_init_t *p_e
 
   memset(&add_char_params, 0, sizeof(add_char_params));
   add_char_params.uuid              = BLE_UUID_CHAR[charac];
-  add_char_params.max_len           = sizeof(uint16_t);
-  add_char_params.init_len          = sizeof(uint16_t);
+  add_char_params.max_len           = 100;
+  add_char_params.init_len          = sizeof(uint8_t);
   add_char_params.char_props.notify = p_ecg->is_notification_supported;
   add_char_params.char_props.read   = 1;
   add_char_params.cccd_write_access = p_ecg_init->bl_cccd_wr_sec;

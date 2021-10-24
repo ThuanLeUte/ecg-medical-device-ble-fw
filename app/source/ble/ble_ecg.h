@@ -138,7 +138,9 @@ uint32_t ble_ecg_init(ble_ecg_t *p_ecg, ble_ecg_init_t const *p_ecg_init);
  *
  * @return        None
  */
-ret_code_t ble_ecg_update(ble_ecg_t *p_ecg, uint16_t ecg, uint16_t conn_handle, ble_ecg_charaterictic_t charac);
+ret_code_t ble_ecg_update(ble_ecg_t *p_ecg, uint8_t *ecg,
+                          uint16_t len, uint16_t conn_handle,
+                          ble_ecg_charaterictic_t charac);
 
 /**
  * @brief                     Function for handling the Nordic ECG Service's BLE events.

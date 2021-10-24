@@ -14,6 +14,8 @@
 #include "bsp_afe.h"
 
 /* Private defines ---------------------------------------------------- */
+#define SHIFT_BIT_ADS1293  (3)
+
 /* Private enumerate/structure ---------------------------------------- */
 /* Private macros ----------------------------------------------------- */
 /* Public variables --------------------------------------------------- */
@@ -66,8 +68,8 @@ static base_status_t m_bsp_afe_read_channels(int16_t value[ADS_NUM_CHANNEL])
     // Compose int32_t value
     i[k] = (int32_t)((r[3 * k] << 16) | (r[3 * k + 1] << 8) | r[3 * k + 2]);
 
-    // Convert int32_t to float
-    value[k] = (int16_t)i[k];
+    // Output for recording
+    value[k] = ((int32_t)i[k]) >> SHIFT_BIT_ADS1293;
   }
 
   return BS_OK;

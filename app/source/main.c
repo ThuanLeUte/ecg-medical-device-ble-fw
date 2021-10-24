@@ -154,18 +154,31 @@ int main(void)
 
   int16_t signal_val[ADS_NUM_CHANNEL];
 
+  int16_t ecg_channel_buf[ADS_NUM_CHANNEL][10];
+  int16_t index = 0;
+
   while (1)
   {
     if (nrf_gpio_pin_read(IO_AFE_DRDY) == false)
     {
       bsp_afe_get_ecg(signal_val);
 
-      ble_ecg_update(&m_ecg, (uint8_t *)&signal_val[0], sizeof(signal_val[0]), BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_1_CHAR);
-      ble_ecg_update(&m_ecg, (uint8_t *)&signal_val[1], sizeof(signal_val[1]), BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_2_CHAR);
-      ble_ecg_update(&m_ecg, (uint8_t *)&signal_val[2], sizeof(signal_val[2]), BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_3_CHAR);
+      ecg_channel_buf[0][index] = signal_val[0];
+      ecg_channel_buf[1][index] = signal_val[1];
+      ecg_channel_buf[2][index] = signal_val[2];
+
+      index++;
+
+      if (index >= 10)
+      {
+        index = 0;
+        ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf[0], 20, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_1_CHAR);
+        ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf[1], 20, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_2_CHAR);
+        ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf[2], 20, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_3_CHAR);
+      }
     }
 
-    bsp_delay_ms(2000);
+    bsp_delay_ms(2);
   }
 
   for (;;)

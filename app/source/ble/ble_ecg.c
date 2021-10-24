@@ -18,9 +18,9 @@
 #include "nrf_log.h"
 
 /* Private defines ---------------------------------------------------- */
-#define BLE_UUID_ECG_CHANNEL_1_CHARACTERISTIC  0x1231
-#define BLE_UUID_ECG_CHANNEL_2_CHARACTERISTIC  0x1232
-#define BLE_UUID_ECG_CHANNEL_3_CHARACTERISTIC  0x1233
+#define BLE_UUID_ECG_CHANNEL_1_CHARACTERISTIC  0x1235
+#define BLE_UUID_ECG_CHANNEL_2_CHARACTERISTIC  0x1236
+#define BLE_UUID_ECG_CHANNEL_3_CHARACTERISTIC  0x1237
 
 #define ECG_BASE_UUID                                                                                \
   {                                                                                                  \
@@ -96,7 +96,6 @@ ret_code_t ble_ecg_update(ble_ecg_t *p_ecg, uint8_t *ecg,
 
     hvx_params.handle = p_ecg->acc_char_handles[charac].value_handle;
     hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;
-    hvx_params.offset = 0;
     hvx_params.p_len  = &len;
     hvx_params.p_data = ecg;
 
@@ -168,6 +167,7 @@ static ret_code_t m_ble_ecg_add_char(ble_ecg_t *p_ecg, const ble_ecg_init_t *p_e
   add_char_params.init_len          = sizeof(uint8_t);
   add_char_params.char_props.notify = p_ecg->is_notification_supported;
   add_char_params.char_props.read   = 1;
+  add_char_params.is_var_len        = true;
   add_char_params.cccd_write_access = p_ecg_init->bl_cccd_wr_sec;
   add_char_params.read_access       = p_ecg_init->bl_rd_sec;
 

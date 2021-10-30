@@ -64,7 +64,7 @@ int bsp_spi_transmit_receive(uint8_t *tx_data, uint8_t *rx_data, uint16_t len)
   data_ready = BS_FALSE;
 
   nrf_drv_spi_transfer(&m_spi, tx_data, len, rx_data, len);
- // while (!data_ready)
+  while (!data_ready)
   {
   }
   

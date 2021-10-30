@@ -56,7 +56,7 @@
 
 #define MANUFACTURER_NAME               "Medtec"                                   /**< Manufacturer. Will be passed to Device Information Service. */
 
-#define ACS_SERVICE_UUID_TYPE           BLE_UUID_TYPE_VENDOR_BEGIN                  /**< UUID type for the Nordic UART Service (vendor specific). */
+#define ECG_SERVICE_UUID_TYPE           BLE_UUID_TYPE_VENDOR_BEGIN                  /**< UUID type for the Nordic UART Service (vendor specific). */
 
 #define APP_BLE_OBSERVER_PRIO           3                                           /**< Application's BLE observer priority. You shouldn't need to modify this value. */
 
@@ -75,7 +75,7 @@
 #define DEAD_BEEF                       0xDEADBEEF                                  /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 
 /* Private macros ----------------------------------------------------- */                                                            /**< BLE HRNS service instance. */
-BLE_ACS_DEF(m_acs);                                                                 /**< BLE ACS service instance. */
+BLE_ECG_DEF(m_ecg);                                                                 /**< BLE ECG service instance. */
 BLE_BAS_DEF(m_bas);                                                                 /**< Structure used to identify the battery service. */
 NRF_BLE_GATT_DEF(m_gatt);                                                           /**< GATT module instance. */
 NRF_BLE_QWR_DEF(m_qwr);                                                             /**< Context for the Queued Write module.*/
@@ -107,7 +107,6 @@ static void gatt_init(void);
 static void advertising_init(void);
 static void log_init(void);
 static void power_management_init(void);
-static void idle_state_handle(void);
 static void advertising_start(void);
 
 static void battery_level_meas_timeout_handler(void * p_context);
@@ -116,7 +115,7 @@ static void sensors_meas_timeout_handler(void * p_context);
 static void battery_level_update(void);
 static void sensors_value_update(void);
 
-static void acs_service_init(void);
+static void ecg_service_init(void);
 static void bas_service_init(void);
 static void dis_service_init(void);
 
@@ -140,25 +139,44 @@ int main(void)
   conn_params_init();
 
   bsp_hw_init(); // Bsp init
+
   bsp_afe_init();
+
+  bsp_bm_init();
 
   float temp;
   bsp_bm_init();
   bsp_bm_temperature(&temp);
-  
-  // while (1)
-  // {
-  //   bsp_afe_init();
-  //   nrf_delay_ms(2000);
-  // }
 
   // Start execution.
   application_timers_start();
   advertising_start();
 
+  int16_t signal_val[ADS_NUM_CHANNEL];
+
+  int16_t ecg_channel_buf[ADS_NUM_CHANNEL][10];
+  int16_t index = 0;
+
   for (;;)
   {
-    idle_state_handle();
+    if (nrf_gpio_pin_read(IO_AFE_DRDY) == false)
+    {
+      bsp_afe_get_ecg(signal_val);
+
+      ecg_channel_buf[0][index] = signal_val[0];
+      ecg_channel_buf[1][index] = signal_val[1];
+      ecg_channel_buf[2][index] = signal_val[2];
+
+      index++;
+
+      if (index >= 10)
+      {
+        index = 0;
+        ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf[0], 20, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_1_CHAR);
+        ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf[1], 20, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_2_CHAR);
+        ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf[2], 20, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_3_CHAR);
+      }
+    }
   }
 }
 
@@ -252,7 +270,7 @@ static void nrf_qwr_error_handler(uint32_t nrf_error)
 }
 
 /**
- * @brief         Function for ACS service init
+ * @brief         Function for ECG service init
  *
  * @param[in]     None
  *
@@ -260,23 +278,23 @@ static void nrf_qwr_error_handler(uint32_t nrf_error)
  *
  * @return        None
  */
-static void acs_service_init(void)
+static void ecg_service_init(void)
 {
   uint32_t           err_code;
-  ble_acs_init_t     acs_init;
+  ble_ecg_init_t     ecg_init;
 
-// Initialize ACS
-  memset(&acs_init, 0, sizeof(acs_init));
+	// Initialize ECG
+  memset(&ecg_init, 0, sizeof(ecg_init));
 
-  acs_init.evt_handler          = NULL;
-  acs_init.support_notification = true;
-  acs_init.p_report_ref         = NULL;
+  ecg_init.evt_handler          = NULL;
+  ecg_init.support_notification = true;
+  ecg_init.p_report_ref         = NULL;
 
-  acs_init.bl_rd_sec        = SEC_OPEN;
-  acs_init.bl_cccd_wr_sec   = SEC_OPEN;
-  acs_init.bl_report_rd_sec = SEC_OPEN;
+  ecg_init.bl_rd_sec        = SEC_OPEN;
+  ecg_init.bl_cccd_wr_sec   = SEC_OPEN;
+  ecg_init.bl_report_rd_sec = SEC_OPEN;
 
-  err_code = ble_acs_init(&m_acs, &acs_init);
+  err_code = ble_ecg_init(&m_ecg, &ecg_init);
   APP_ERROR_CHECK(err_code);
 }
 
@@ -357,7 +375,7 @@ static void services_init(void)
   APP_ERROR_CHECK(err_code);
 
   // Initialize Custom Service
-  acs_service_init();
+  ecg_service_init();
 
   // Initialize Battery Service.
   bas_service_init();
@@ -728,23 +746,6 @@ static void power_management_init(void)
   ret_code_t err_code;
   err_code = nrf_pwr_mgmt_init();
   APP_ERROR_CHECK(err_code);
-}
-
-/**
- * @brief         Function for handling the idle state (main loop).
- *
- * @param[in]     None
- *
- * @attention     None
- *
- * @return        None
- */
-static void idle_state_handle(void)
-{
-  if (NRF_LOG_PROCESS() == false)
-  {
-    nrf_pwr_mgmt_run();
-  }
 }
 
 /**

@@ -24,7 +24,7 @@
 /* Function definitions ----------------------------------------------- */
 void exint_afe_drdy_event_handler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 {
-  bsp_afe_get_ecg();
+//  bsp_afe_get_ecg();
 }
 
 /* Private function definitions ---------------------------------------- */

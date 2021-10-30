@@ -156,15 +156,17 @@ static void m_bsp_gpio_init(void)
   err_code = nrf_drv_gpiote_init();
   APP_ERROR_CHECK(err_code);
 
-  // AFE ready config pin
-  nrf_drv_gpiote_in_config_t in_config = GPIOTE_CONFIG_IN_SENSE_HITOLO(true);
-  in_config.pull = NRF_GPIO_PIN_PULLUP;
+  // // AFE ready config pin
+  // nrf_drv_gpiote_in_config_t in_config = GPIOTE_CONFIG_IN_SENSE_HITOLO(true);
+  // in_config.pull = NRF_GPIO_PIN_PULLUP;
 
-  err_code = nrf_drv_gpiote_in_init(IO_AFE_DRDY, &in_config, exint_afe_drdy_event_handler);
-  APP_ERROR_CHECK(err_code);
+  // err_code = nrf_drv_gpiote_in_init(IO_AFE_DRDY, &in_config, exint_afe_drdy_event_handler);
+  // APP_ERROR_CHECK(err_code);
+  // nrf_drv_gpiote_in_event_enable(IO_AFE_DRDY, true);
 
-  nrf_drv_gpiote_in_event_enable(IO_AFE_DRDY, true);
+  nrf_gpio_cfg_input(IO_AFE_DRDY, NRF_GPIO_PIN_PULLUP);
 
+  // Output in setting
   nrf_gpio_cfg_output(IO_AFE_CS);
   bsp_gpio_write(IO_AFE_CS, 0);
 

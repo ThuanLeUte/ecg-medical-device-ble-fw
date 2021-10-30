@@ -101,7 +101,7 @@ const ads1293_seting_t ADS1293_SETTING_LIST[] =
    //  +===============================+=======+
    //  |REGISTER                       | VALUE
    //  +-------------------------------+-------+
-   INFO(ADS1293_REG_CONFIG,                0x0A)
+   INFO(ADS1293_REG_CONFIG,                0x00)
   ,INFO(ADS1293_REG_FLEX_CH1_CN,           0x0A)
   ,INFO(ADS1293_REG_FLEX_CH2_CN,           0x1A)
   ,INFO(ADS1293_REG_FLEX_CH3_CN,           0x00)

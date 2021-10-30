@@ -168,7 +168,7 @@ static void m_bsp_gpio_init(void)
 
   // Output in setting
   nrf_gpio_cfg_output(IO_AFE_CS);
-  bsp_gpio_write(IO_AFE_CS, 0);
+  bsp_gpio_write(IO_AFE_CS, 1);
 
   nrf_gpio_cfg_output(IO_AFE_RST);
   bsp_gpio_write(IO_AFE_RST, 1);

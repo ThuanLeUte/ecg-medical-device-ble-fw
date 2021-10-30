@@ -84,8 +84,7 @@ static base_status_t m_ads1293_read_reg(ads1293_t *me, uint8_t reg, uint8_t *p_d
 
   for (uint8_t i = 0; i < len; i++)
   {
-    // CHECK(0 == me->spi_transmit_receive(NULL, p_data, 1), BS_ERROR);
-    me->spi_transmit_receive(NULL, p_data + i, 1);
+    CHECK(0 == me->spi_transmit_receive(NULL, p_data + i, 1), BS_ERROR);
   }
 
   bsp_gpio_write(IO_AFE_CS, 1);

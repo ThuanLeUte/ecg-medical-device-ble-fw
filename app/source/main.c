@@ -107,7 +107,6 @@ static void gatt_init(void);
 static void advertising_init(void);
 static void log_init(void);
 static void power_management_init(void);
-static void idle_state_handle(void);
 static void advertising_start(void);
 
 static void battery_level_meas_timeout_handler(void * p_context);
@@ -157,7 +156,7 @@ int main(void)
   int16_t ecg_channel_buf[ADS_NUM_CHANNEL][10];
   int16_t index = 0;
 
-  while (1)
+  for (;;)
   {
     if (nrf_gpio_pin_read(IO_AFE_DRDY) == false)
     {
@@ -177,13 +176,6 @@ int main(void)
         ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf[2], 20, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_3_CHAR);
       }
     }
-
-    bsp_delay_ms(2);
-  }
-
-  for (;;)
-  {
-    idle_state_handle();
   }
 }
 
@@ -753,23 +745,6 @@ static void power_management_init(void)
   ret_code_t err_code;
   err_code = nrf_pwr_mgmt_init();
   APP_ERROR_CHECK(err_code);
-}
-
-/**
- * @brief         Function for handling the idle state (main loop).
- *
- * @param[in]     None
- *
- * @attention     None
- *
- * @return        None
- */
-static void idle_state_handle(void)
-{
-  if (NRF_LOG_PROCESS() == false)
-  {
-    nrf_pwr_mgmt_run();
-  }
 }
 
 /**

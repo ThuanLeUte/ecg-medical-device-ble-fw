@@ -22,7 +22,7 @@ extern "C" {
 #include "bsp/bsp.h"
 
 /* Public defines ----------------------------------------------------- */
-#define ADS_NUM_CHANNEL   (3)
+#define ADS_NUM_CHANNEL   (2)
 
 /* Public enumerate/structure ----------------------------------------- */
 /**

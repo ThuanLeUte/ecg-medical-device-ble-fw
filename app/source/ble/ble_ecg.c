@@ -18,9 +18,7 @@
 #include "nrf_log.h"
 
 /* Private defines ---------------------------------------------------- */
-#define BLE_UUID_ECG_CHANNEL_1_CHARACTERISTIC  0x1235
-#define BLE_UUID_ECG_CHANNEL_2_CHARACTERISTIC  0x1236
-#define BLE_UUID_ECG_CHANNEL_3_CHARACTERISTIC  0x1237
+#define BLE_UUID_ECG_CHANNEL_CHARACTERISTIC  0x1235
 
 #define ECG_BASE_UUID                                                                                \
   {                                                                                                  \
@@ -34,9 +32,7 @@
 /* Public variables --------------------------------------------------- */
 /* Private variables -------------------------------------------------- */
 static const uint16_t BLE_UUID_CHAR[] = {
-  BLE_UUID_ECG_CHANNEL_1_CHARACTERISTIC,
-  BLE_UUID_ECG_CHANNEL_2_CHARACTERISTIC,
-  BLE_UUID_ECG_CHANNEL_3_CHARACTERISTIC
+  BLE_UUID_ECG_CHANNEL_CHARACTERISTIC
 };
 
 /* Private function prototypes ---------------------------------------- */
@@ -72,13 +68,10 @@ uint32_t ble_ecg_init(ble_ecg_t *p_ecg, ble_ecg_init_t const *p_ecg_init)
   VERIFY_SUCCESS(err_code);
 
   // Add the ECG Characteristics.
-  err_code = m_ble_ecg_add_char(p_ecg, p_ecg_init, BLE_ECG_CHANNEL_1_CHAR);
+  err_code = m_ble_ecg_add_char(p_ecg, p_ecg_init, BLE_ECG_CHANNEL_CHAR);
   VERIFY_SUCCESS(err_code);
 
-  err_code = m_ble_ecg_add_char(p_ecg, p_ecg_init, BLE_ECG_CHANNEL_2_CHAR);
-  VERIFY_SUCCESS(err_code);
-
-  return m_ble_ecg_add_char(p_ecg, p_ecg_init, BLE_ECG_CHANNEL_3_CHAR);
+  return err_code;
 }
 
 ret_code_t ble_ecg_update(ble_ecg_t *p_ecg, uint8_t *ecg,
@@ -163,7 +156,7 @@ static ret_code_t m_ble_ecg_add_char(ble_ecg_t *p_ecg, const ble_ecg_init_t *p_e
 
   memset(&add_char_params, 0, sizeof(add_char_params));
   add_char_params.uuid              = BLE_UUID_CHAR[charac];
-  add_char_params.max_len           = 100;
+  add_char_params.max_len           = 250;
   add_char_params.init_len          = sizeof(uint8_t);
   add_char_params.char_props.notify = p_ecg->is_notification_supported;
   add_char_params.char_props.read   = 1;

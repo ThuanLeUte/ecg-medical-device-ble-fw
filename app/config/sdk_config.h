@@ -497,7 +497,7 @@
 // <e> BLE_NUS_ENABLED - ble_nus - Nordic UART Service
 //==========================================================
 #ifndef BLE_NUS_ENABLED
-#define BLE_NUS_ENABLED 0
+#define BLE_NUS_ENABLED 1
 #endif
 // <e> BLE_NUS_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
@@ -556,21 +556,21 @@
  
 
 #ifndef BLE_RSCS_C_ENABLED
-#define BLE_RSCS_C_ENABLED 0
+#define BLE_RSCS_C_ENABLED 1
 #endif
 
 // <q> BLE_RSCS_ENABLED  - ble_rscs - Running Speed and Cadence Service
  
 
 #ifndef BLE_RSCS_ENABLED
-#define BLE_RSCS_ENABLED 0
+#define BLE_RSCS_ENABLED 1
 #endif
 
 // <q> BLE_TPS_ENABLED  - ble_tps - TX Power Service
  
 
 #ifndef BLE_TPS_ENABLED
-#define BLE_TPS_ENABLED 0
+#define BLE_TPS_ENABLED 1
 #endif
 
 // </h> 

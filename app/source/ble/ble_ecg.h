@@ -32,9 +32,7 @@
  */
 typedef enum
 {
-  BLE_ECG_CHANNEL_1_CHAR,
-  BLE_ECG_CHANNEL_2_CHAR,
-  BLE_ECG_CHANNEL_3_CHAR,
+  BLE_ECG_CHANNEL_CHAR,
   BLE_ECG_MAX_CHAR
 } 
 ble_ecg_charaterictic_t;

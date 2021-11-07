@@ -33,6 +33,7 @@
 #include "bsp/bsp.h"
 #include "ble_bas.h"
 #include "ble_dis.h"
+#include "ble_nus.h"
 #include "ble/ble_ecg.h"
 #include "bsp.h"
 #include "nrf52832_peripherals.h"
@@ -64,8 +65,8 @@
 
 #define APP_ADV_DURATION                18000                                       /**< The advertising duration (180 seconds) in units of 10 milliseconds. */
 
-#define MIN_CONN_INTERVAL               MSEC_TO_UNITS(20, UNIT_1_25_MS)             /**< Minimum acceptable connection interval (20 ms), Connection interval uses 1.25 ms units. */
-#define MAX_CONN_INTERVAL               MSEC_TO_UNITS(75, UNIT_1_25_MS)             /**< Maximum acceptable connection interval (75 ms), Connection interval uses 1.25 ms units. */
+#define MIN_CONN_INTERVAL               MSEC_TO_UNITS(8, UNIT_1_25_MS)             /**< Minimum acceptable connection interval (20 ms), Connection interval uses 1.25 ms units. */
+#define MAX_CONN_INTERVAL               MSEC_TO_UNITS(15, UNIT_1_25_MS)             /**< Maximum acceptable connection interval (75 ms), Connection interval uses 1.25 ms units. */
 #define SLAVE_LATENCY                   0                                           /**< Slave latency. */
 #define CONN_SUP_TIMEOUT                MSEC_TO_UNITS(4000, UNIT_10_MS)             /**< Connection supervisory timeout (4 seconds), Supervision Timeout uses 10 ms units. */
 #define FIRST_CONN_PARAMS_UPDATE_DELAY  APP_TIMER_TICKS(5000)                       /**< Time from initiating event (connect or start of notification) to first time sd_ble_gap_conn_param_update is called (5 seconds). */
@@ -74,7 +75,8 @@
 
 #define DEAD_BEEF                       0xDEADBEEF                                  /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 
-/* Private macros ----------------------------------------------------- */                                                            /**< BLE HRNS service instance. */
+/* Private macros ----------------------------------------------------- */
+BLE_NUS_DEF(m_nus, 1);                                                                 /**< BLE ECG service instance. */
 BLE_ECG_DEF(m_ecg);                                                                 /**< BLE ECG service instance. */
 BLE_BAS_DEF(m_bas);                                                                 /**< Structure used to identify the battery service. */
 NRF_BLE_GATT_DEF(m_gatt);                                                           /**< GATT module instance. */
@@ -116,12 +118,42 @@ static void battery_level_update(void);
 static void sensors_value_update(void);
 
 static void ecg_service_init(void);
+static void nus_service_init(void);
 static void bas_service_init(void);
 static void dis_service_init(void);
 
 static void application_timers_start(void);
 
 /* Function definitions ----------------------------------------------- */
+static void nus_data_handler(ble_nus_evt_t * p_evt)
+{
+
+    if (p_evt->type == BLE_NUS_EVT_RX_DATA)
+    {
+        //uint32_t err_code;
+        NRF_LOG_DEBUG("Received data from BLE NUS. Writing data on UART.");
+        NRF_LOG_HEXDUMP_DEBUG(p_evt->params.rx_data.p_data, p_evt->params.rx_data.length);
+        // process_command_from_app(p_evt->params.rx_data.p_data[0]);
+       // for (uint32_t i = 0; i < p_evt->params.rx_data.length; i++)
+        {
+          
+//            do
+//            {
+//                err_code = app_uart_put(p_evt->params.rx_data.p_data[i]);
+//                if ((err_code != NRF_SUCCESS) && (err_code != NRF_ERROR_BUSY))
+//                {
+//                    NRF_LOG_ERROR("Failed receiving NUS message. Error 0x%x. ", err_code);
+//                    APP_ERROR_CHECK(err_code);
+//                }
+//            } while (err_code == NRF_ERROR_BUSY);
+        }
+//        if (p_evt->params.rx_data.p_data[p_evt->params.rx_data.length - 1] == '\r')
+//        {
+//            while (app_uart_put('\n') == NRF_ERROR_BUSY);
+//        }
+    }
+
+}
 /**
  * @brief Application main function.
  */
@@ -154,8 +186,9 @@ int main(void)
 
   int16_t signal_val[ADS_NUM_CHANNEL];
 
-  int16_t ecg_channel_buf[ADS_NUM_CHANNEL][10];
+  int16_t ecg_channel_buf[200];
   int16_t index = 0;
+  uint16_t length = 200;
 
   for (;;)
   {
@@ -163,18 +196,16 @@ int main(void)
     {
       bsp_afe_get_ecg(signal_val);
 
-      ecg_channel_buf[0][index] = signal_val[0];
-      ecg_channel_buf[1][index] = signal_val[1];
-      ecg_channel_buf[2][index] = signal_val[2];
+      ecg_channel_buf[index]     = signal_val[0];
+      ecg_channel_buf[index + 1] = signal_val[1];
 
-      index++;
+      index += 2;
 
-      if (index >= 10)
+      if (index >= 100)
       {
         index = 0;
-        ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf[0], 20, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_1_CHAR);
-        ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf[1], 20, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_2_CHAR);
-        ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf[2], 20, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_3_CHAR);
+        ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf, 200, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_CHAR);
+        // ble_nus_data_send(&m_nus, (uint8_t *)&ecg_channel_buf, &length, m_conn_handle);
       }
     }
   }
@@ -299,6 +330,29 @@ static void ecg_service_init(void)
 }
 
 /**
+ * @brief         Function for ECG service init
+ *
+ * @param[in]     None
+ *
+ * @attention     None
+ *
+ * @return        None
+ */
+static void nus_service_init(void)
+{
+  uint32_t           err_code;
+  ble_nus_init_t     nus_init;
+
+  // Initialize ECG
+  memset(&nus_init, 0, sizeof(nus_init));
+
+  nus_init.data_handler = nus_data_handler;
+
+  err_code = ble_nus_init(&m_nus, &nus_init);
+  APP_ERROR_CHECK(err_code);
+}
+
+/**
  * @brief         Function for BAS service init
  *
  * @param[in]     None
@@ -376,6 +430,7 @@ static void services_init(void)
 
   // Initialize Custom Service
   ecg_service_init();
+  // nus_service_init();
 
   // Initialize Battery Service.
   bas_service_init();

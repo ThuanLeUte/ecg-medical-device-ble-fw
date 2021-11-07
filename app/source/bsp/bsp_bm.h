@@ -24,6 +24,15 @@ extern "C" {
 
 /* Public defines ----------------------------------------------------- */
 /* Public enumerate/structure ----------------------------------------- */
+typedef struct
+{
+  float temp;
+  float voltage;
+  float current;
+  uint8_t capacity;
+}
+bsp_bm_info_t;
+
 /* Public macros ------------------------------------------------------ */
 /* Public variables --------------------------------------------------- */
 /* Public function prototypes ----------------------------------------- */
@@ -40,7 +49,7 @@ extern "C" {
  */
 base_status_t bsp_bm_init(void);
 
-base_status_t bsp_bm_temperature(float *temp);
+base_status_t bsp_bm_get_info(bsp_bm_info_t *bm);
 
 /* -------------------------------------------------------------------------- */
 #ifdef __cplusplus

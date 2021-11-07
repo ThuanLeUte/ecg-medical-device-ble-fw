@@ -33,9 +33,12 @@ base_status_t bsp_bm_init(void)
   return BS_OK;
 }
 
-base_status_t bsp_bm_temperature(float *temp)
+base_status_t bsp_bm_get_info(bsp_bm_info_t *bm)
 {
-  CHECK_STATUS(ds2728_get_temperature(&m_ds2728, temp));
+  CHECK_STATUS(ds2728_get_temperature(&m_ds2728, &bm->temp));
+//   CHECK_STATUS(ds2728_get_current(&m_ds2728, &bm->current));
+//   CHECK_STATUS(ds2728_get_voltage(&m_ds2728, &bm->voltage));
+//   CHECK_STATUS(ds2728_get_capacity(&m_ds2728, &bm->capacity));
 
   return BS_OK;
 }

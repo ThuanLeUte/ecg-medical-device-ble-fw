@@ -93,6 +93,8 @@ static ble_uuid_t m_adv_uuids[]          =                                      
 };
 
 uint32_t app_time;
+static bsp_bm_info_t m_bm;
+
 /* Private function prototypes ---------------------------------------- */
 static void timers_init(void);
 static void gap_params_init(void);
@@ -145,9 +147,9 @@ int main(void)
 
   bsp_bm_init();
 
-  float temp;
   bsp_bm_init();
-  bsp_bm_temperature(&temp);
+
+  bsp_bm_get_info(&m_bm);
 
   // Start execution.
   application_timers_start();

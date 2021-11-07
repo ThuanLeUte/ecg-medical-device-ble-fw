@@ -76,7 +76,6 @@
 #define DEAD_BEEF                       0xDEADBEEF                                  /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 
 /* Private macros ----------------------------------------------------- */
-BLE_NUS_DEF(m_nus, 1);                                                                 /**< BLE ECG service instance. */
 BLE_ECG_DEF(m_ecg);                                                                 /**< BLE ECG service instance. */
 BLE_BAS_DEF(m_bas);                                                                 /**< Structure used to identify the battery service. */
 NRF_BLE_GATT_DEF(m_gatt);                                                           /**< GATT module instance. */
@@ -118,42 +117,12 @@ static void battery_level_update(void);
 static void sensors_value_update(void);
 
 static void ecg_service_init(void);
-static void nus_service_init(void);
 static void bas_service_init(void);
 static void dis_service_init(void);
 
 static void application_timers_start(void);
 
 /* Function definitions ----------------------------------------------- */
-static void nus_data_handler(ble_nus_evt_t * p_evt)
-{
-
-    if (p_evt->type == BLE_NUS_EVT_RX_DATA)
-    {
-        //uint32_t err_code;
-        NRF_LOG_DEBUG("Received data from BLE NUS. Writing data on UART.");
-        NRF_LOG_HEXDUMP_DEBUG(p_evt->params.rx_data.p_data, p_evt->params.rx_data.length);
-        // process_command_from_app(p_evt->params.rx_data.p_data[0]);
-       // for (uint32_t i = 0; i < p_evt->params.rx_data.length; i++)
-        {
-          
-//            do
-//            {
-//                err_code = app_uart_put(p_evt->params.rx_data.p_data[i]);
-//                if ((err_code != NRF_SUCCESS) && (err_code != NRF_ERROR_BUSY))
-//                {
-//                    NRF_LOG_ERROR("Failed receiving NUS message. Error 0x%x. ", err_code);
-//                    APP_ERROR_CHECK(err_code);
-//                }
-//            } while (err_code == NRF_ERROR_BUSY);
-        }
-//        if (p_evt->params.rx_data.p_data[p_evt->params.rx_data.length - 1] == '\r')
-//        {
-//            while (app_uart_put('\n') == NRF_ERROR_BUSY);
-//        }
-    }
-
-}
 /**
  * @brief Application main function.
  */
@@ -205,7 +174,6 @@ int main(void)
       {
         index = 0;
         ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf, 200, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_CHAR);
-        // ble_nus_data_send(&m_nus, (uint8_t *)&ecg_channel_buf, &length, m_conn_handle);
       }
     }
   }
@@ -314,7 +282,7 @@ static void ecg_service_init(void)
   uint32_t           err_code;
   ble_ecg_init_t     ecg_init;
 
-	// Initialize ECG
+  // Initialize ECG
   memset(&ecg_init, 0, sizeof(ecg_init));
 
   ecg_init.evt_handler          = NULL;
@@ -326,29 +294,6 @@ static void ecg_service_init(void)
   ecg_init.bl_report_rd_sec = SEC_OPEN;
 
   err_code = ble_ecg_init(&m_ecg, &ecg_init);
-  APP_ERROR_CHECK(err_code);
-}
-
-/**
- * @brief         Function for ECG service init
- *
- * @param[in]     None
- *
- * @attention     None
- *
- * @return        None
- */
-static void nus_service_init(void)
-{
-  uint32_t           err_code;
-  ble_nus_init_t     nus_init;
-
-  // Initialize ECG
-  memset(&nus_init, 0, sizeof(nus_init));
-
-  nus_init.data_handler = nus_data_handler;
-
-  err_code = ble_nus_init(&m_nus, &nus_init);
   APP_ERROR_CHECK(err_code);
 }
 
@@ -430,7 +375,6 @@ static void services_init(void)
 
   // Initialize Custom Service
   ecg_service_init();
-  // nus_service_init();
 
   // Initialize Battery Service.
   bas_service_init();

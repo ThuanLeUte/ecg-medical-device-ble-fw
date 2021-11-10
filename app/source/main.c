@@ -93,7 +93,6 @@ static ble_uuid_t m_adv_uuids[]          =                                      
 };
 
 uint32_t app_time;
-static bsp_bm_info_t m_bm;
 
 /* Private function prototypes ---------------------------------------- */
 static void timers_init(void);
@@ -116,7 +115,6 @@ static void battery_level_meas_timeout_handler(void * p_context);
 static void sensors_meas_timeout_handler(void * p_context);
 
 static void battery_level_update(void);
-static void sensors_value_update(void);
 
 static void ecg_service_init(void);
 static void bas_service_init(void);
@@ -147,10 +145,6 @@ int main(void)
 
   bsp_bm_init();
 
-  bsp_bm_init();
-
-  bsp_bm_get_info(&m_bm);
-
   // Start execution.
   application_timers_start();
   advertising_start();
@@ -159,7 +153,6 @@ int main(void)
 
   int16_t ecg_channel_buf[200];
   int16_t index = 0;
-  uint16_t length = 200;
 
   for (;;)
   {
@@ -515,6 +508,9 @@ static void ble_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
   switch (p_ble_evt->header.evt_id)
   {
   case BLE_GAP_EVT_CONNECTED:
+    bsp_gpio_write(IO_RGB_BLUE, 0);
+    bsp_gpio_write(IO_RGB_GREEN, 1);
+
     NRF_LOG_INFO("Connected");
     err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
     APP_ERROR_CHECK(err_code);
@@ -524,6 +520,9 @@ static void ble_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
     break;
 
   case BLE_GAP_EVT_DISCONNECTED:
+    bsp_gpio_write(IO_RGB_GREEN, 0);
+    bsp_gpio_write(IO_RGB_BLUE, 1);
+
     NRF_LOG_INFO("Disconnected");
     m_conn_handle = BLE_CONN_HANDLE_INVALID;
     break;
@@ -791,7 +790,6 @@ static void battery_level_meas_timeout_handler(void * p_context)
 static void sensors_meas_timeout_handler(void * p_context)
 {
   UNUSED_PARAMETER(p_context);
-  sensors_value_update();
 }
 
 /**
@@ -805,38 +803,13 @@ static void sensors_meas_timeout_handler(void * p_context)
  */
 static void battery_level_update(void)
 {
-  uint8_t battery_level              = 0;
-  static  uint8_t battery_cal_time   = 0;
-  static  uint16_t sum_battery_level = 0;
+  uint8_t battery_level;
 
- // sys_bm_get_level_in_percent(&battery_level);
-  sum_battery_level += battery_level;
-  battery_cal_time ++;
+  bsp_bm_get_soc(&battery_level);
 
-  if (battery_cal_time >= 10)
-  {
-    battery_level = sum_battery_level / battery_cal_time;
-    NRF_LOG_INFO( "Battery avg : %d percent", battery_level);
-    battery_cal_time  = 0;
-    sum_battery_level = 0;
+  NRF_LOG_INFO("Battery avg : %d percent", battery_level);
 
-   ble_bas_battery_level_update(&m_bas, battery_level, BLE_CONN_HANDLE_ALL);
-  }
-}
-
-/**
- * @brief         Function for handling the body temperature update
- *
- * @param[in]     None
- *
- * @attention     None
- *
- * @return        None
- */
-static void sensors_value_update(void)
-{
-  // bsp_afe_get_ecg();
-  // bsp_afe_init();
+  ble_bas_battery_level_update(&m_bas, battery_level, BLE_CONN_HANDLE_ALL);
 }
 
 /**
@@ -853,11 +826,8 @@ static void application_timers_start(void)
   ret_code_t err_code;
 
   // Start application timers.
-  err_code = app_timer_start(m_sensors_timer_id, SENSORS_MEAS_INTERVAL, NULL);
-    APP_ERROR_CHECK(err_code);
-
   err_code =  app_timer_start(m_battery_timer_id, BATT_LEVEL_MEAS_INTERVAL, NULL);
-    APP_ERROR_CHECK(err_code);
+  APP_ERROR_CHECK(err_code);
 }
 
 /* End of fi le -------------------------------------------------------- */

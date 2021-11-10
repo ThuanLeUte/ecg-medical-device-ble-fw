@@ -51,6 +51,8 @@ base_status_t bsp_bm_init(void);
 
 base_status_t bsp_bm_get_info(bsp_bm_info_t *bm);
 
+base_status_t bsp_bm_get_soc(uint8_t *soc);
+
 /* -------------------------------------------------------------------------- */
 #ifdef __cplusplus
 } // extern "C"

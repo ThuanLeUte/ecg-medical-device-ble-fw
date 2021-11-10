@@ -37,9 +37,9 @@ extern "C" {
 #define IO_AFE_CS               (17)    // AFE CS
 
 #define IO_CHARGE_FAST          (06)    // CHARGE FAST
-#define IO_RGB_BLUE             (28)    // RGB BLUE
-#define IO_RGB_GREEN            (29)    // RGB GREEN
-#define IO_RGB_RED              (30)    // RGB RED
+#define IO_RGB_RED              (29)    // RGB RED
+#define IO_RGB_GREEN            (28)    // RGB GREEN
+#define IO_RGB_BLUE             (30)    // RGB BLUE
 
 /* Public enumerate/structure ----------------------------------------- */
 /* Public macros ------------------------------------------------------ */

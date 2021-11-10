@@ -172,6 +172,14 @@ static void m_bsp_gpio_init(void)
 
   nrf_gpio_cfg_output(IO_AFE_RST);
   bsp_gpio_write(IO_AFE_RST, 1);
+
+  nrf_gpio_cfg_output(IO_RGB_BLUE);
+  nrf_gpio_cfg_output(IO_RGB_RED);
+  nrf_gpio_cfg_output(IO_RGB_GREEN);
+
+  bsp_gpio_write(IO_RGB_BLUE, 1);
+  bsp_gpio_write(IO_RGB_RED, 1);
+  bsp_gpio_write(IO_RGB_GREEN, 0);
 }
 
 /* End of file -------------------------------------------------------- */

@@ -145,6 +145,8 @@ int main(void)
 
   bsp_bm_init();
 
+  battery_level_update();
+
   // Start execution.
   application_timers_start();
   advertising_start();

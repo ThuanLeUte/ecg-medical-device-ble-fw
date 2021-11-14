@@ -150,7 +150,6 @@ int main(void)
   advertising_start();
 
   int16_t signal_val[ADS_NUM_CHANNEL];
-
   int16_t ecg_channel_buf[200];
   int16_t index = 0;
 

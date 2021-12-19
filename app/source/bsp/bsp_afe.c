@@ -79,19 +79,12 @@ static base_status_t m_bsp_afe_read_channels(int32_t value[ADS_NUM_CHANNEL])
     m_ads1293_read_reg(&m_ads1293, 0x38, &x2, 1);
     m_ads1293_read_reg(&m_ads1293, 0x39, &x3, 1);
 
-    ecgVal = x1;
-    ecgVal = (ecgVal << 8) | x2;
-    ecgVal = (ecgVal << 8) | x3;
+    uint32_t tempData = (uint32_t)x1 << 16;
+    tempData = (uint32_t)x2 << 8;
+    tempData |= x3;
+    tempData = tempData << 8;
 
-    // // Short range smoothing
-    ecgTmp = ecgTmp * .5 +  ecgVal* .5;
-
-    // Baseline
-    ecgTmp2 = ecgTmp2 * .90 + ecgVal * .10;
-
-    // Output for recording
-    value[0] = ecgTmp - ecgTmp2;
-    // value[0] = ecgVal;
+    value[0] = tempData;
   }
 
   return BS_OK;

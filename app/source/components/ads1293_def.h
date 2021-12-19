@@ -158,15 +158,15 @@ const ads1293_seting_t ADS1293_SETTING_LIST[] =
 
   // /*
   // 2560 SPS / 512 HZ
-  // R1 = 2
-  // R2 = 8
-  // R3 = 6
+  // R1 = 4
+  // R2 = 5
+  // R3 = 4
   // */
-  // ,INFO(ADS1293_REG_R2_RATE,               0x08)
-  // ,INFO(ADS1293_REG_R3_RATE1,              0x02)
-  // ,INFO(ADS1293_REG_R3_RATE2,              0x02)
-  // ,INFO(ADS1293_REG_R3_RATE3,              0x02)
-  // ,INFO(ADS1293_REG_R1_P_DRATE,            0x07)
+  // ,INFO(ADS1293_REG_R2_RATE,               0x02)
+  // ,INFO(ADS1293_REG_R3_RATE1,              0x01)
+  // ,INFO(ADS1293_REG_R3_RATE2,              0x01)
+  // ,INFO(ADS1293_REG_R3_RATE3,              0x01)
+  // ,INFO(ADS1293_REG_R1_P_DRATE,            0x00)
 
   // /*
   // CH1 ECG as DRDYB source
@@ -180,18 +180,18 @@ const ads1293_seting_t ADS1293_SETTING_LIST[] =
   // ,INFO(ADS1293_REG_CH_CNFG,               0x30)
   // //  +===============================+=======+
 
-   INFO(0x01, 0x11)
-  ,INFO(0x02, 0x19)
-  ,INFO(0x0A, 0x07)
-  ,INFO(0x0C, 0x04)
-  ,INFO(0x12, 0x04)
-  ,INFO(0x14, 0x24)
-  ,INFO(0x21, 0x02)
-  ,INFO(0x22, 0x02)
-  ,INFO(0x23, 0x02)
-  ,INFO(0x27, 0x08)
-  ,INFO(0x2F, 0x30)
-  ,INFO(0x00, 0x01)
+   INFO(ADS1293_REG_FLEX_CH1_CN, 0x11)
+  ,INFO(ADS1293_REG_FLEX_CH2_CN, 0x19)
+  ,INFO(ADS1293_REG_CMDET_EN, 0x07)
+  ,INFO(ADS1293_REG_RLD_CN, 0x04)
+  ,INFO(ADS1293_REG_OSC_CN, 0x04)
+  ,INFO(ADS1293_REG_AFE_SHDN_CN, 0x24)
+  ,INFO(ADS1293_REG_R2_RATE, 0x02)
+  ,INFO(ADS1293_REG_R3_RATE1, 0x02)
+  ,INFO(ADS1293_REG_R3_RATE2, 0x02)
+  ,INFO(ADS1293_REG_DRDYB_SRC, 0x08)
+  ,INFO(ADS1293_REG_CH_CNFG, 0x30)
+  ,INFO(ADS1293_REG_CONFIG, 0x01)
 };
 #undef INFO
 

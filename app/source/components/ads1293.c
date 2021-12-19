@@ -24,7 +24,7 @@
 /* Public variables --------------------------------------------------- */
 /* Private variables -------------------------------------------------- */
 /* Private function prototypes ---------------------------------------- */
-static base_status_t m_ads1293_read_reg(ads1293_t *me, uint8_t reg, uint8_t *p_data, uint32_t len);
+// static base_status_t m_ads1293_read_reg(ads1293_t *me, uint8_t reg, uint8_t *p_data, uint32_t len);
 static base_status_t m_ads1293_write_reg(ads1293_t *me, uint8_t reg, uint8_t data);
 
 /* Function definitions ----------------------------------------------- */
@@ -75,7 +75,7 @@ base_status_t ads1293_read_ecg(ads1293_t *me, uint8_t *data)
  * - BS_OK
  * - BS_ERROR
  */
-static base_status_t m_ads1293_read_reg(ads1293_t *me, uint8_t reg, uint8_t *p_data, uint32_t len)
+base_status_t m_ads1293_read_reg(ads1293_t *me, uint8_t reg, uint8_t *p_data, uint32_t len)
 {
   bsp_gpio_write(IO_AFE_CS, 0);
 

@@ -23,7 +23,7 @@
 static ads1293_t m_ads1293;
 
 /* Private function prototypes ---------------------------------------- */
-static base_status_t m_bsp_afe_read_channels(int16_t value[ADS_NUM_CHANNEL]);
+static base_status_t m_bsp_afe_read_channels(int32_t value[ADS_NUM_CHANNEL]);
 
 /* Function definitions ----------------------------------------------- */
 base_status_t bsp_afe_init(void)
@@ -38,7 +38,7 @@ base_status_t bsp_afe_init(void)
   return BS_OK;
 }
 
-base_status_t bsp_afe_get_ecg(int16_t value[ADS_NUM_CHANNEL])
+base_status_t bsp_afe_get_ecg(int32_t value[ADS_NUM_CHANNEL])
 {
   m_bsp_afe_read_channels(value);
 
@@ -57,20 +57,41 @@ base_status_t bsp_afe_get_ecg(int16_t value[ADS_NUM_CHANNEL])
  * - BS_OK
  * - BS_ERROR
  */
-static base_status_t m_bsp_afe_read_channels(int16_t value[ADS_NUM_CHANNEL])
+static base_status_t m_bsp_afe_read_channels(int32_t value[ADS_NUM_CHANNEL])
 {
   uint8_t r[ADS_NUM_CHANNEL * 3];
   int32_t i[ADS_NUM_CHANNEL];
 
-  CHECK_STATUS(ads1293_read_ecg(&m_ads1293, r));
+  // CHECK_STATUS(ads1293_read_ecg(&m_ads1293, r));
 
-  for (int k = 0; k < ADS_NUM_CHANNEL; k++)
+  int32_t ecgTmp = 0;
+  int32_t ecgTmp2 = 0;
+  int32_t ecgVal;
+
+  uint8_t x1, x2, x3;
+
+  // for (int k = 0; k < ADS_NUM_CHANNEL; k++)
   {
     // Compose int32_t value
-    i[k] = (int32_t)((r[3 * k] << 16) | (r[3 * k + 1] << 8) | r[3 * k + 2]);
+    // i[k] = (int32_t)((r[3 * k] << 16) | (r[3 * k + 1] << 8) | r[3 * k + 2]);
+
+    m_ads1293_read_reg(&m_ads1293, 0x37, &x1, 1);
+    m_ads1293_read_reg(&m_ads1293, 0x38, &x2, 1);
+    m_ads1293_read_reg(&m_ads1293, 0x39, &x3, 1);
+
+    ecgVal = x1;
+    ecgVal = (ecgVal << 8) | x2;
+    ecgVal = (ecgVal << 8) | x3;
+
+    // // Short range smoothing
+    ecgTmp = ecgTmp * .5 +  ecgVal* .5;
+
+    // Baseline
+    ecgTmp2 = ecgTmp2 * .90 + ecgVal * .10;
 
     // Output for recording
-    value[k] = ((int32_t)i[k]) >> SHIFT_BIT_ADS1293;
+    value[0] = ecgTmp - ecgTmp2;
+    // value[0] = ecgVal;
   }
 
   return BS_OK;

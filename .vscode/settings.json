@@ -2,6 +2,7 @@
     "C_Cpp.errorSquiggles": "Disabled",
     "files.associations": {
         "bsp.h": "c",
-        "ads1293_def.h": "c"
+        "ads1293_def.h": "c",
+        "bsp_afe.h": "c"
     }
 }

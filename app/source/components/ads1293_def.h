@@ -98,87 +98,100 @@ ads1293_seting_t;
 #define INFO(_register, _value)[_register] = { .reg = _register, .value = _value }
 const ads1293_seting_t ADS1293_SETTING_LIST[] =
 {
-   //  +===============================+=======+
-   //  |REGISTER                       | VALUE
-   //  +-------------------------------+-------+
-   INFO(ADS1293_REG_CONFIG,                0x00)
+  //  //  +===============================+=======+
+  //  //  |REGISTER                       | VALUE
+  //  //  +-------------------------------+-------+
+  //  INFO(ADS1293_REG_CONFIG,                0x00)
   
-  /*
-  LEAD I    = LA - RA
-  LEAD II   = LL - RA
-  LEAD III  = Disconnect
+  // /*
+  // LEAD I    = LA - RA
+  // LEAD II   = LL - RA
+  // LEAD III  = Disconnect
 
-  CH1P - IN2 - LA   -->   LEAD I
-  CH1N - IN1 - RA
-  CH2P - IN3 - LL   -->   LEAD II
-  CH2N - IN1 - RA
-  */
-  ,INFO(ADS1293_REG_FLEX_CH1_CN,           0x11)
-  ,INFO(ADS1293_REG_FLEX_CH2_CN,           0x19)
-  ,INFO(ADS1293_REG_FLEX_CH3_CN,           0x00)
-  ,INFO(ADS1293_REG_FLEX_PACE_CN,          0x00)
-  ,INFO(ADS1293_REG_FLEX_VBAT_CN,          0x00)
+  // CH1P - IN2 - LA   -->   LEAD I
+  // CH1N - IN1 - RA
+  // CH2P - IN3 - LL   -->   LEAD II
+  // CH2N - IN1 - RA
+  // */
+  // ,INFO(ADS1293_REG_FLEX_CH1_CN,           0x11)
+  // ,INFO(ADS1293_REG_FLEX_CH2_CN,           0x19)
+  // ,INFO(ADS1293_REG_FLEX_CH3_CN,           0x00)
+  // ,INFO(ADS1293_REG_FLEX_PACE_CN,          0x00)
+  // ,INFO(ADS1293_REG_FLEX_VBAT_CN,          0x00)
 
-  /*
-  Lead-off detection circuitry is shut down
-  */
-  ,INFO(ADS1293_REG_LOD_CN,                0x08)
-  ,INFO(ADS1293_REG_LOD_EN,                0x00)
-  ,INFO(ADS1293_REG_LOD_CURRENT,           0x00)
-  ,INFO(ADS1293_REG_LOD_AC_CN,             0x00)
+  // /*
+  // Lead-off detection circuitry is shut down
+  // */
+  // ,INFO(ADS1293_REG_LOD_CN,                0x08)
+  // ,INFO(ADS1293_REG_LOD_EN,                0x00)
+  // ,INFO(ADS1293_REG_LOD_CURRENT,           0x00)
+  // ,INFO(ADS1293_REG_LOD_AC_CN,             0x00)
 
-  /*
-  Common-Mode Detect Enable for: IN1, IN2, IN3
-  Right-leg drive output connected to IN4
-  */
-  ,INFO(ADS1293_REG_CMDET_EN,              0x07)
-  ,INFO(ADS1293_REG_CMDET_CN,              0x00)
-  ,INFO(ADS1293_REG_RLD_CN,                0x04)
+  // /*
+  // Common-Mode Detect Enable for: IN1, IN2, IN3
+  // Right-leg drive output connected to IN4
+  // */
+  // ,INFO(ADS1293_REG_CMDET_EN,              0x07)
+  // ,INFO(ADS1293_REG_CMDET_CN,              0x00)
+  // ,INFO(ADS1293_REG_RLD_CN,                0x04)
 
-  /*
-  Internal reference voltage is on (2.4V)
-  */
-  ,INFO(ADS1293_REG_REF_CN,                0x00)
+  // /*
+  // Internal reference voltage is on (2.4V)
+  // */
+  // ,INFO(ADS1293_REG_REF_CN,                0x00)
 
-  /*
-  Use internal clock with external
-  */
-  ,INFO(ADS1293_REG_OSC_CN,                0x05)
+  // /*
+  // Use internal clock with external
+  // */
+  // ,INFO(ADS1293_REG_OSC_CN,                0x05)
 
-  /*
-  2560 SPS / 512 HZ
-  Analog Front-End Frequency and Resolution
-  */
-  ,INFO(ADS1293_REG_AFE_RES,               0x38)
+  // /*
+  // 2560 SPS / 512 HZ
+  // Analog Front-End Frequency and Resolution
+  // */
+  // ,INFO(ADS1293_REG_AFE_RES,               0x38)
 
-  /*
-  Connect the analog pace channel ourput to the RLDIN pin
-  */
-  ,INFO(ADS1293_REG_AFE_PACE_CN,           0x0A)
+  // /*
+  // Connect the analog pace channel ourput to the RLDIN pin
+  // */
+  // ,INFO(ADS1293_REG_AFE_PACE_CN,           0x0A)
 
-  /*
-  2560 SPS / 512 HZ
-  R1 = 4
-  R2 = 5
-  R3 = 4
-  */
-  ,INFO(ADS1293_REG_R2_RATE,               0x02)
-  ,INFO(ADS1293_REG_R3_RATE1,              0x01)
-  ,INFO(ADS1293_REG_R3_RATE2,              0x01)
-  ,INFO(ADS1293_REG_R3_RATE3,              0x01)
-  ,INFO(ADS1293_REG_R1_P_DRATE,            0x00)
+  // /*
+  // 2560 SPS / 512 HZ
+  // R1 = 4
+  // R2 = 5
+  // R3 = 4
+  // */
+  // ,INFO(ADS1293_REG_R2_RATE,               0x02)
+  // ,INFO(ADS1293_REG_R3_RATE1,              0x01)
+  // ,INFO(ADS1293_REG_R3_RATE2,              0x01)
+  // ,INFO(ADS1293_REG_R3_RATE3,              0x01)
+  // ,INFO(ADS1293_REG_R1_P_DRATE,            0x00)
 
-  /*
-  CH1 ECG as DRDYB source
-  */
-  ,INFO(ADS1293_REG_DRDYB_SRC,             0x08)
+  // /*
+  // CH1 ECG as DRDYB source
+  // */
+  // ,INFO(ADS1293_REG_DRDYB_SRC,             0x08)
 
-  /*
-  Enable loop back read on CH1, CH2, CH3
-  */
-  ,INFO(ADS1293_REG_ALARM_FILTER,          0x33)
-  ,INFO(ADS1293_REG_CH_CNFG,               0x30)
-  //  +===============================+=======+
+  // /*
+  // Enable loop back read on CH1, CH2, CH3
+  // */
+  // ,INFO(ADS1293_REG_ALARM_FILTER,          0x33)
+  // ,INFO(ADS1293_REG_CH_CNFG,               0x30)
+  // //  +===============================+=======+
+
+   INFO(ADS1293_REG_FLEX_CH1_CN, 0x11)
+  ,INFO(ADS1293_REG_FLEX_CH2_CN, 0x19)
+  ,INFO(ADS1293_REG_CMDET_EN, 0x07)
+  ,INFO(ADS1293_REG_RLD_CN, 0x04)
+  ,INFO(ADS1293_REG_OSC_CN, 0x04)
+  ,INFO(ADS1293_REG_AFE_SHDN_CN, 0x24)
+  ,INFO(ADS1293_REG_R2_RATE, 0x02)
+  ,INFO(ADS1293_REG_R3_RATE1, 0x02)
+  ,INFO(ADS1293_REG_R3_RATE2, 0x02)
+  ,INFO(ADS1293_REG_DRDYB_SRC, 0x08)
+  ,INFO(ADS1293_REG_CH_CNFG, 0x30)
+  ,INFO(ADS1293_REG_CONFIG, 0x01)
 };
 #undef INFO
 

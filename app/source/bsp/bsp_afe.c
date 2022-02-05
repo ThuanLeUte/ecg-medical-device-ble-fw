@@ -23,7 +23,7 @@
 static ads1293_t m_ads1293;
 
 /* Private function prototypes ---------------------------------------- */
-static base_status_t m_bsp_afe_read_channels(int16_t value[ADS_NUM_CHANNEL]);
+static base_status_t m_bsp_afe_read_channels(int32_t value[ADS_NUM_CHANNEL]);
 
 /* Function definitions ----------------------------------------------- */
 base_status_t bsp_afe_init(void)
@@ -38,7 +38,7 @@ base_status_t bsp_afe_init(void)
   return BS_OK;
 }
 
-base_status_t bsp_afe_get_ecg(int16_t value[ADS_NUM_CHANNEL])
+base_status_t bsp_afe_get_ecg(int32_t value[ADS_NUM_CHANNEL])
 {
   m_bsp_afe_read_channels(value);
 
@@ -57,22 +57,24 @@ base_status_t bsp_afe_get_ecg(int16_t value[ADS_NUM_CHANNEL])
  * - BS_OK
  * - BS_ERROR
  */
-static base_status_t m_bsp_afe_read_channels(int16_t value[ADS_NUM_CHANNEL])
+static base_status_t m_bsp_afe_read_channels(int32_t value[ADS_NUM_CHANNEL])
 {
-  uint8_t r[ADS_NUM_CHANNEL * 3];
-  int32_t i[ADS_NUM_CHANNEL];
+  uint8_t rx[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-  CHECK_STATUS(ads1293_read_ecg(&m_ads1293, r));
+  m_ads1293_read_reg(&m_ads1293, 0x50, &rx[0], sizeof(rx));
 
-  for (int k = 0; k < ADS_NUM_CHANNEL; k++)
-  {
-    // Compose int32_t value
-    i[k] = (int32_t)((r[3 * k] << 16) | (r[3 * k + 1] << 8) | r[3 * k + 2]);
+  uint32_t tempData = (uint32_t)rx[0] << 16;
+  tempData |= (uint32_t)rx[1] << 8;
+  tempData |= rx[2];
 
-    // Output for recording
-    value[k] = ((int32_t)i[k]) >> SHIFT_BIT_ADS1293;
-  }
+  value[0] = tempData;
+  
+  tempData = (uint32_t)rx[3] << 16;
+  tempData |= (uint32_t)rx[4] << 8;
+  tempData |= rx[5];  
 
+  value[1] = tempData;
+  
   return BS_OK;
 }
 

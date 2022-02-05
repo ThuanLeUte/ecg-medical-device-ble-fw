@@ -123,8 +123,9 @@ int bsp_i2c_read(uint8_t slave_addr, uint8_t reg_addr, uint8_t *p_data, uint32_t
  * @brief         SPI transmit and receive
  *
  * @param[in]     tx_data       Transmit data
+ * @param[in]     tx_len        Transmit Data length
  * @param[in]     rx_data       Receive data
- * @param[in]     len           Data length
+ * @param[in]     rx_len        Receive Data length
  *
  * @attention     None
  *
@@ -132,7 +133,7 @@ int bsp_i2c_read(uint8_t slave_addr, uint8_t reg_addr, uint8_t *p_data, uint32_t
  * - 0      Succes
  * - 1      Error
  */
-int bsp_spi_transmit_receive(uint8_t *tx_data, uint8_t *rx_data, uint16_t len);
+int bsp_spi_transmit_receive(uint8_t *tx_data, uint16_t tx_len, uint8_t *rx_data, uint16_t rx_len);
 
 /**
  * @brief         I2C write

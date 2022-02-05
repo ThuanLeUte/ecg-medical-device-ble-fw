@@ -149,7 +149,7 @@ int main(void)
 
   // Start execution.
   application_timers_start();
-  advertising_start();
+//  advertising_start();
 
   int16_t signal_val[ADS_NUM_CHANNEL];
   int16_t ecg_channel_buf[200];
@@ -157,19 +157,23 @@ int main(void)
 
   for (;;)
   {
+    NRF_LOG_PROCESS();
+          
     if (nrf_gpio_pin_read(IO_AFE_DRDY) == false)
     {
       bsp_afe_get_ecg(signal_val);
 
       ecg_channel_buf[index]     = signal_val[0];
       ecg_channel_buf[index + 1] = signal_val[1];
+      
+      NRF_LOG_RAW_INFO("%d\n", signal_val[0]);
 
       index += 2;
 
       if (index >= 100)
       {
         index = 0;
-        ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf, 200, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_CHAR);
+//        ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf, 200, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_CHAR);
       }
     }
   }
@@ -512,7 +516,7 @@ static void ble_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
     bsp_gpio_write(IO_RGB_BLUE, 0);
     bsp_gpio_write(IO_RGB_GREEN, 1);
 
-    NRF_LOG_INFO("Connected");
+//    NRF_LOG_INFO("Connected");
     err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
     APP_ERROR_CHECK(err_code);
     m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
@@ -524,13 +528,13 @@ static void ble_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
     bsp_gpio_write(IO_RGB_GREEN, 0);
     bsp_gpio_write(IO_RGB_BLUE, 1);
 
-    NRF_LOG_INFO("Disconnected");
+//    NRF_LOG_INFO("Disconnected");
     m_conn_handle = BLE_CONN_HANDLE_INVALID;
     break;
 
   case BLE_GAP_EVT_PHY_UPDATE_REQUEST:
   {
-    NRF_LOG_DEBUG("PHY update request.");
+//    NRF_LOG_DEBUG("PHY update request.");
     ble_gap_phys_t const phys =
         {
           .rx_phys = BLE_GAP_PHY_AUTO,
@@ -615,8 +619,8 @@ static void gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_evt_t const *p
 {
   if (p_evt->evt_id == NRF_BLE_GATT_EVT_ATT_MTU_UPDATED)
   {
-    NRF_LOG_INFO("GATT ATT MTU on connection 0x%x changed to %d.",
-                 p_evt->conn_handle,
+//    NRF_LOG_INFO("GATT ATT MTU on connection 0x%x changed to %d.", \
+                 p_evt->conn_handle, \
                  p_evt->params.att_mtu_effective);
   }
 }
@@ -808,7 +812,7 @@ static void battery_level_update(void)
 
   bsp_bm_get_soc(&battery_level);
 
-  NRF_LOG_INFO("Battery avg : %d percent", battery_level);
+//  NRF_LOG_INFO("Battery avg : %d percent", battery_level);
 
   ble_bas_battery_level_update(&m_bas, battery_level, BLE_CONN_HANDLE_ALL);
 }

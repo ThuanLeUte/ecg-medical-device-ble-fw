@@ -149,7 +149,7 @@ int main(void)
 
   // Start execution.
   application_timers_start();
-//  advertising_start();
+  advertising_start();
 
   int32_t signal_val[ADS_NUM_CHANNEL];
   int16_t ecg_channel_buf[200];
@@ -167,14 +167,6 @@ int main(void)
       ecg_channel_buf[index + 1] = signal_val[1];
       
       NRF_LOG_RAW_INFO("%d\n", signal_val[0]);
-
-      index += 2;
-
-      if (index >= 100)
-      {
-        index = 0;
-//        ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf, 200, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_CHAR);
-      }
     }
   }
 }

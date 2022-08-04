@@ -502,8 +502,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\source\components\ads1293.c</PathWithFileName>
-      <FilenameWithoutPath>ads1293.c</FilenameWithoutPath>
+      <PathWithFileName>..\source\components\ads1292.c</PathWithFileName>
+      <FilenameWithoutPath>ads1292.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

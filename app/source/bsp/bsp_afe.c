@@ -5,7 +5,7 @@
  * @version    1.0.0
  * @date       2021-09-05
  * @author     Thuan Le
- * @brief      Board Support Package for AFE (ADS1293)
+ * @brief      Board Support Package for AFE (ADS1292)
  * @note       None
  * @example    None
  */
@@ -14,13 +14,13 @@
 #include "bsp_afe.h"
 
 /* Private defines ---------------------------------------------------- */
-#define SHIFT_BIT_ADS1293  (3)
+#define SHIFT_BIT_ADS1292  (3)
 
 /* Private enumerate/structure ---------------------------------------- */
 /* Private macros ----------------------------------------------------- */
 /* Public variables --------------------------------------------------- */
 /* Private variables -------------------------------------------------- */
-static ads1293_t m_ads1293;
+static ads1292_t m_ads1292;
 
 /* Private function prototypes ---------------------------------------- */
 static base_status_t m_bsp_afe_read_channels(int32_t value[ADS_NUM_CHANNEL]);
@@ -28,12 +28,12 @@ static base_status_t m_bsp_afe_read_channels(int32_t value[ADS_NUM_CHANNEL]);
 /* Function definitions ----------------------------------------------- */
 base_status_t bsp_afe_init(void)
 {
-  m_ads1293.spi_transmit_receive = bsp_spi_transmit_receive;
-  m_ads1293.gpio_write           = bsp_gpio_write;
+  m_ads1292.spi_transmit_receive = bsp_spi_transmit_receive;
+  m_ads1292.gpio_write           = bsp_gpio_write;
 
-  CHECK_STATUS(ads1293_init(&m_ads1293));
+  CHECK_STATUS(ads1292_init(&m_ads1292));
 
-  CHECK_STATUS(ads1293_start_convert(&m_ads1293, BS_TRUE));
+  CHECK_STATUS(ads1292_start_convert(&m_ads1292, BS_TRUE));
 
   return BS_OK;
 }
@@ -61,7 +61,7 @@ static base_status_t m_bsp_afe_read_channels(int32_t value[ADS_NUM_CHANNEL])
 {
   uint8_t rx[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-  m_ads1293_read_reg(&m_ads1293, 0x50, &rx[0], sizeof(rx));
+  m_ads1292_read_reg(&m_ads1292, 0x50, &rx[0], sizeof(rx));
 
   uint32_t tempData = (uint32_t)rx[0] << 16;
   tempData |= (uint32_t)rx[1] << 8;

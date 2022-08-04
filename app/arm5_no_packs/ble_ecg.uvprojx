@@ -409,9 +409,9 @@
               <FilePath>..\source\bsp\bsp_bm.c</FilePath>
             </File>
             <File>
-              <FileName>ads1293.c</FileName>
+              <FileName>ads1292.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\source\components\ads1293.c</FilePath>
+              <FilePath>..\source\components\ads1292.c</FilePath>
             </File>
             <File>
               <FileName>ds2728.c</FileName>
@@ -4071,9 +4071,9 @@
               <FilePath>..\source\bsp\bsp_bm.c</FilePath>
             </File>
             <File>
-              <FileName>ads1293.c</FileName>
+              <FileName>ads1292.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\source\components\ads1293.c</FilePath>
+              <FilePath>..\source\components\ads1292.c</FilePath>
             </File>
             <File>
               <FileName>ds2728.c</FileName>

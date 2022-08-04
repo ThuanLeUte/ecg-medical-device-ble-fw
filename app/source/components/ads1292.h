@@ -1,18 +1,18 @@
 /**
- * @file       ads1293.h
+ * @file       ads1292.h
  * @copyright  Copyright (C) 2020 Hydratech. All rights reserved.
  * @license    This project is released under the Hydratech License.
  * @version    1.0.0
  * @date       2021-07-31
  * @author     Thuan Le
- * @brief      Driver support ADS1293 (Analog Front-End for Biopotential Measurements)
+ * @brief      Driver support ADS1292 (Analog Front-End for Biopotential Measurements)
  * @note       None
  * @example    None
  */
 
 /* Define to prevent recursive inclusion ------------------------------ */
-#ifndef __ADS1293_H
-#define __ADS1293_H
+#ifndef __ADS1292_H
+#define __ADS1292_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,7 +26,7 @@ extern "C" {
 
 /* Public enumerate/structure ----------------------------------------- */
 /**
- * @brief ADS1293 axis enable enum
+ * @brief ADS1292 axis enable enum
  */
 typedef enum
 {
@@ -35,10 +35,10 @@ typedef enum
   ,MIS2DH_AXIS_Z_ENABLE   = 0x04
   ,MIS2DH_AXIS_XYZ_ENABLE = 0x07
 }
-ads1293_axis_enable_t;
+ads1292_axis_enable_t;
 
 /**
- * @brief ADS1293 sensor struct
+ * @brief ADS1292 sensor struct
  */
 typedef struct 
 {
@@ -46,13 +46,13 @@ typedef struct
 
   int (*spi_transmit_receive)(uint8_t *tx_data, uint8_t *rx_data, uint16_t len);
 }
-ads1293_t;
+ads1292_t;
 
 /* Public function prototypes ----------------------------------------- */
 /**
- * @brief         ADS1293 init
+ * @brief         ADS1292 init
  *
- * @param[in]     me      Pointer to handle of ADS1293 module.
+ * @param[in]     me      Pointer to handle of ADS1292 module.
  *
  * @attention     None
  *
@@ -60,12 +60,12 @@ ads1293_t;
  * - BS_OK
  * - BS_ERROR
  */
-base_status_t ads1293_init(ads1293_t *me);
+base_status_t ads1292_init(ads1292_t *me);
 
 /**
- * @brief         ADS1293 start convert
+ * @brief         ADS1292 start convert
  *
- * @param[in]     me        Pointer to handle of ADS1293 module.
+ * @param[in]     me        Pointer to handle of ADS1292 module.
  * @param[in]     enable    Enable
  *
  * @attention     None
@@ -74,12 +74,12 @@ base_status_t ads1293_init(ads1293_t *me);
  * - BS_OK
  * - BS_ERROR
  */
-base_status_t ads1293_start_convert(ads1293_t *me, bool enable);
+base_status_t ads1292_start_convert(ads1292_t *me, bool enable);
 
 /**
- * @brief         ADS1293 read ECG
+ * @brief         ADS1292 read ECG
  *
- * @param[in]     me        Pointer to handle of ADS1293 module.
+ * @param[in]     me        Pointer to handle of ADS1292 module.
  * @param[in]     data      Pointer to ECG data
  *
  * @attention     None
@@ -88,12 +88,12 @@ base_status_t ads1293_start_convert(ads1293_t *me, bool enable);
  * - BS_OK
  * - BS_ERROR
  */
-base_status_t ads1293_read_ecg(ads1293_t *me, uint8_t *data);
+base_status_t ads1292_read_ecg(ads1292_t *me, uint8_t *data);
 
 /**
- * @brief         ADS1293 set sampling state
+ * @brief         ADS1292 set sampling state
  *
- * @param[in]     me       Pointer to handle of ADS1293 module.
+ * @param[in]     me       Pointer to handle of ADS1292 module.
  * @param[in]     state    BS_TRUE:  Start sampling
  *                         BS_FALSE: Stop sampling
  * @attention     None
@@ -102,12 +102,12 @@ base_status_t ads1293_read_ecg(ads1293_t *me, uint8_t *data);
  * - BS_OK
  * - BS_ERROR
  */
-base_status_t ads1293_set_sampling_state(ads1293_t *me, bool_t state);
+base_status_t ads1292_set_sampling_state(ads1292_t *me, bool_t state);
 
 /**
- * @brief         ADS1293 set sampling rate
+ * @brief         ADS1292 set sampling rate
  *
- * @param[in]     me        Pointer to handle of ADS1293 module.
+ * @param[in]     me        Pointer to handle of ADS1292 module.
  * @param[in]     rate      Sampling rate
  *
  * @attention     None
@@ -116,15 +116,15 @@ base_status_t ads1293_set_sampling_state(ads1293_t *me, bool_t state);
  * - BS_OK
  * - BS_ERROR
  */
-base_status_t ads1293_set_sampling_rate(ads1293_t *me, uint16_t rate);
+base_status_t ads1292_set_sampling_rate(ads1292_t *me, uint16_t rate);
 
 
-base_status_t m_ads1293_read_reg(ads1293_t *me, uint8_t reg, uint8_t *p_data, uint32_t len);
+base_status_t m_ads1292_read_reg(ads1292_t *me, uint8_t reg, uint8_t *p_data, uint32_t len);
 
 /* -------------------------------------------------------------------------- */
 #ifdef __cplusplus
 } // extern "C"
 #endif
-#endif // __ADS1293_H
+#endif // __ADS1292_H
 
 /* End of file -------------------------------------------------------- */

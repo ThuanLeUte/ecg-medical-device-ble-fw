@@ -5,7 +5,7 @@
  * @version    1.0.0
  * @date       2021-09-05
  * @author     Thuan Le
- * @brief      Board Support Package for AFE (ADS1293)
+ * @brief      Board Support Package for AFE (ADS1292)
  * @note       None
  * @example    None
  */
@@ -19,7 +19,7 @@ extern "C" {
 #endif
 
 /* Includes ----------------------------------------------------------- */
-#include "ads1293.h"
+#include "ads1292.h"
 
 /* Public defines ----------------------------------------------------- */
 /* Public enumerate/structure ----------------------------------------- */

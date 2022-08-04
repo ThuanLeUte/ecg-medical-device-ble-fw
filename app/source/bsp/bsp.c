@@ -64,9 +64,9 @@ int bsp_spi_transmit_receive(uint8_t *tx_data, uint8_t *rx_data, uint16_t len)
   data_ready = BS_FALSE;
 
   nrf_drv_spi_transfer(&m_spi, tx_data, len, rx_data, len);
-  while (!data_ready)
-  {
-  }
+  // while (!data_ready)
+  // {
+  // }
   
   return BS_OK;
 }
@@ -133,10 +133,10 @@ static void m_bsp_spi_init(void)
   spi_config.mosi_pin  = IO_AFE_MOSI;
   spi_config.miso_pin  = IO_AFE_MISO;
   spi_config.sck_pin   = IO_AFE_SCLK;
-  spi_config.mode      = NRF_DRV_SPI_MODE_0;
-  spi_config.frequency = NRF_DRV_SPI_FREQ_8M;
+  spi_config.mode      = NRF_DRV_SPI_MODE_1;
+  spi_config.frequency = NRF_DRV_SPI_FREQ_1M;
 
-  err_code = nrf_drv_spi_init(&m_spi, &spi_config, spi_event_handler, NULL);
+  err_code = nrf_drv_spi_init(&m_spi, &spi_config, NULL, NULL);
   APP_ERROR_CHECK(err_code);
 }
 
@@ -156,30 +156,16 @@ static void m_bsp_gpio_init(void)
   err_code = nrf_drv_gpiote_init();
   APP_ERROR_CHECK(err_code);
 
-  // // AFE ready config pin
-  // nrf_drv_gpiote_in_config_t in_config = GPIOTE_CONFIG_IN_SENSE_HITOLO(true);
-  // in_config.pull = NRF_GPIO_PIN_PULLUP;
-
-  // err_code = nrf_drv_gpiote_in_init(IO_AFE_DRDY, &in_config, exint_afe_drdy_event_handler);
-  // APP_ERROR_CHECK(err_code);
-  // nrf_drv_gpiote_in_event_enable(IO_AFE_DRDY, true);
-
   nrf_gpio_cfg_input(IO_AFE_DRDY, NRF_GPIO_PIN_PULLUP);
 
   // Output in setting
   nrf_gpio_cfg_output(IO_AFE_CS);
-  bsp_gpio_write(IO_AFE_CS, 1);
-
   nrf_gpio_cfg_output(IO_AFE_RST);
+  nrf_gpio_cfg_output(IO_AFE_START);
+
+  bsp_gpio_write(IO_AFE_CS, 1);
   bsp_gpio_write(IO_AFE_RST, 1);
-
-  nrf_gpio_cfg_output(IO_RGB_BLUE);
-  nrf_gpio_cfg_output(IO_RGB_RED);
-  nrf_gpio_cfg_output(IO_RGB_GREEN);
-
-  bsp_gpio_write(IO_RGB_BLUE, 1);
-  bsp_gpio_write(IO_RGB_RED, 1);
-  bsp_gpio_write(IO_RGB_GREEN, 0);
+  bsp_gpio_write(IO_AFE_START, 0);
 }
 
 /* End of file -------------------------------------------------------- */

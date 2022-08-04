@@ -26,18 +26,6 @@ extern "C" {
 
 /* Public enumerate/structure ----------------------------------------- */
 /**
- * @brief ADS1292 axis enable enum
- */
-typedef enum
-{
-   MIS2DH_AXIS_X_ENABLE   = 0x01
-  ,MIS2DH_AXIS_Y_ENABLE   = 0x02
-  ,MIS2DH_AXIS_Z_ENABLE   = 0x04
-  ,MIS2DH_AXIS_XYZ_ENABLE = 0x07
-}
-ads1292_axis_enable_t;
-
-/**
  * @brief ADS1292 sensor struct
  */
 typedef struct 

@@ -28,13 +28,13 @@ extern "C" {
 #define IO_I2C0_SCL             (11)    // SCL signal pin
 #define IO_I2C0_SDA             (12)    // SDA signal pin
 
-#define IO_AFE_ALARM            (08)    // AFE ALARM
-#define IO_AFE_RST              (10)    // AFE RST
-#define IO_AFE_DRDY             (13)    // AFE DRDY
-#define IO_AFE_MISO             (14)    // AFE MISO
-#define IO_AFE_MOSI             (15)    // AFE MOSI
-#define IO_AFE_SCLK             (16)    // AFE SCLK
-#define IO_AFE_CS               (17)    // AFE CS
+#define IO_AFE_START            (30)    // AFE START
+#define IO_AFE_RST              (19)    // AFE RST
+#define IO_AFE_DRDY             (20)    // AFE DRDY
+#define IO_AFE_MISO             (28)    // AFE MISO
+#define IO_AFE_MOSI             (25)    // AFE MOSI
+#define IO_AFE_SCLK             (29)    // AFE SCLK
+#define IO_AFE_CS               (31)    // AFE CS
 
 #define IO_CHARGE_FAST          (06)    // CHARGE FAST
 #define IO_RGB_RED              (29)    // RGB RED

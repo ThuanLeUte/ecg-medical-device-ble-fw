@@ -57,11 +57,10 @@ base_status_t bsp_afe_get_ecg(int32_t value[ADS_NUM_CHANNEL])
  * - BS_OK
  * - BS_ERROR
  */
+uint8_t rx[9] = {0xFF};
 static base_status_t m_bsp_afe_read_channels(int32_t value[ADS_NUM_CHANNEL])
 {
-  uint8_t rx[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-
-  // m_ads1292_read_reg(&m_ads1292, 0x50, &rx[0], sizeof(rx));
+  m_ads1292_read_data(&m_ads1292, rx, 9);
 
   uint32_t tempData = (uint32_t)rx[0] << 16;
   tempData |= (uint32_t)rx[1] << 8;

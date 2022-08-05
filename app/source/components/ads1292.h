@@ -77,6 +77,7 @@ base_status_t ads1292_start_convert(ads1292_t *me, bool enable);
  * - BS_ERROR
  */
 base_status_t ads1292_read_ecg(ads1292_t *me, uint8_t *data);
+base_status_t m_ads1292_read_data(ads1292_t *me, uint8_t *p_data, uint16_t len);
 
 /* -------------------------------------------------------------------------- */
 #ifdef __cplusplus

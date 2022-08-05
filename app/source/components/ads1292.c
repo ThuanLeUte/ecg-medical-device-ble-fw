@@ -58,8 +58,10 @@ base_status_t ads1292_init(ads1292_t *me)
   // Write init setting
   for (uint8_t i = 0; i < (sizeof(ADS1292_SETTING_LIST) / sizeof(ADS1292_SETTING_LIST[0])); i++)
   {
-    m_ads1292_write_reg(me, ADS1292_SETTING_LIST[i].reg, ADS1292_SETTING_LIST[i].value);
+    CHECK_STATUS(m_ads1292_write_reg(me, ADS1292_SETTING_LIST[i].reg, ADS1292_SETTING_LIST[i].value));
   }
+
+  CHECK_STATUS(m_ads1292_send_cmd(me, ADS1292_CMD_RDATAC));
 
   return BS_OK;
 }
@@ -158,6 +160,14 @@ static base_status_t m_ads1292_send_cmd(ads1292_t *me, uint8_t cmd)
   bsp_gpio_write(IO_AFE_CS, 1);
 
   return BS_OK;
+}
+
+base_status_t m_ads1292_read_data(ads1292_t *me, uint8_t *p_data, uint16_t len)
+{
+  bsp_gpio_write(IO_AFE_CS, 0);
+  CHECK(0 == me->spi_transmit_receive(p_data, p_data, len), BS_ERROR);
+  bsp_delay_ms(2); // Decode delay
+  bsp_gpio_write(IO_AFE_CS, 1);
 }
 
 /* End of file -------------------------------------------------------- */

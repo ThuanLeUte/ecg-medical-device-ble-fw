@@ -53,14 +53,14 @@ const ads1292_seting_t ADS1292_SETTING_LIST[] =
    //  |REGISTER                       | VALUE
    //  +-------------------------------+-------+
    INFO(ADS1292_REG_CONFIG1,               0x00)    // Sampling rate to 125 SPS
-  ,INFO(ADS1292_REG_CONFIG2,         0b10100000)    // Lead-off comp off, test signal disabled
-  ,INFO(ADS1292_REG_LOFF,            0b00010000)    // Lead-off defaults
-  ,INFO(ADS1292_REG_CH1SET,          0b01000000)    // Ch 1 enabled, gain 6, connected to electrode in
-  ,INFO(ADS1292_REG_CH2SET,          0b01100000)    // Ch 2 enabled, gain 6, connected to electrode in
-  ,INFO(ADS1292_REG_RLDSENS,         0b00101100)    // RLD settings: fmod/16, RLD enabled, RLD inputs from Ch2 only
+  ,INFO(ADS1292_REG_CONFIG2,               0xA0)    // Lead-off comp off, test signal disabled
+  ,INFO(ADS1292_REG_LOFF,                  0x10)    // Lead-off defaults
+  ,INFO(ADS1292_REG_CH1SET,                0x40)    // Ch 1 enabled, gain 6, connected to electrode in
+  ,INFO(ADS1292_REG_CH2SET,                0x60)    // Ch 2 enabled, gain 6, connected to electrode in
+  ,INFO(ADS1292_REG_RLDSENS,               0x2C)    // RLD settings: fmod/16, RLD enabled, RLD inputs from Ch2 only
   ,INFO(ADS1292_REG_LOFFSENS,              0x00)    // LOFF settings: all disabled
-  ,INFO(ADS1292_REG_RESP1,           0b11110010)    // Respiration: MOD/DEMOD turned only, phase 0
-  ,INFO(ADS1292_REG_RESP2,           0b00000011)    // Respiration: Calib OFF, respiration freq defaults
+  ,INFO(ADS1292_REG_RESP1,                 0xF2)    // Respiration: MOD/DEMOD turned only, phase 0
+  ,INFO(ADS1292_REG_RESP2,                 0x03)    // Respiration: Calib OFF, respiration freq defaults
    //  +===============================+=======+
 };
 #undef INFO

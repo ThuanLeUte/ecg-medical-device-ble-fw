@@ -61,7 +61,7 @@ static base_status_t m_bsp_afe_read_channels(int32_t value[ADS_NUM_CHANNEL])
 {
   uint8_t rx[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-  m_ads1292_read_reg(&m_ads1292, 0x50, &rx[0], sizeof(rx));
+  // m_ads1292_read_reg(&m_ads1292, 0x50, &rx[0], sizeof(rx));
 
   uint32_t tempData = (uint32_t)rx[0] << 16;
   tempData |= (uint32_t)rx[1] << 8;

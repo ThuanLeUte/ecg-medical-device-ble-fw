@@ -106,9 +106,6 @@ base_status_t ads1292_set_sampling_state(ads1292_t *me, bool_t state);
  */
 base_status_t ads1292_set_sampling_rate(ads1292_t *me, uint16_t rate);
 
-
-base_status_t m_ads1292_read_reg(ads1292_t *me, uint8_t reg, uint8_t *p_data, uint32_t len);
-
 /* -------------------------------------------------------------------------- */
 #ifdef __cplusplus
 } // extern "C"

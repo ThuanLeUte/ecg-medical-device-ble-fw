@@ -49,7 +49,7 @@ base_status_t ads1292_init(ads1292_t *me)
   bsp_gpio_write(IO_AFE_START, 1);
   bsp_delay_ms(100);
 
-  CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_ID, &revision_id, 1) != BS_OK);
+  CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_ID, &revision_id, 1));
 
   NRF_LOG_ERROR("Revision ID: %d", revision_id);
   if (ADS1292_ID_ADS1292R != revision_id)
@@ -100,10 +100,8 @@ static base_status_t m_ads1292_read_reg(ads1292_t *me, uint8_t reg, uint8_t *p_d
   m_ads1292_send_cmd(me, ADS1292_CMD_SDATAC);
 
   bsp_gpio_write(IO_AFE_CS, 0);
-
   CHECK(0 == me->spi_transmit_receive(trx, trx, 3), BS_ERROR);
-
-  bsp_delay_ms(2);
+  bsp_delay_ms(2); // Decode delay
   bsp_gpio_write(IO_AFE_CS, 1);
 
   *p_data = trx[2];
@@ -133,10 +131,8 @@ static base_status_t m_ads1292_write_reg(ads1292_t *me, uint8_t reg, uint8_t dat
   tx[2] = data;
 
   bsp_gpio_write(IO_AFE_CS, 0);
-  
   CHECK(0 == me->spi_transmit_receive(tx, NULL, 3), BS_ERROR);
-
-  bsp_delay_ms(2);
+  bsp_delay_ms(2); // Decode delay
   bsp_gpio_write(IO_AFE_CS, 1);
 
   return BS_OK;
@@ -157,10 +153,8 @@ static base_status_t m_ads1292_write_reg(ads1292_t *me, uint8_t reg, uint8_t dat
 static base_status_t m_ads1292_send_cmd(ads1292_t *me, uint8_t cmd)
 {
   bsp_gpio_write(IO_AFE_CS, 0);
-
   CHECK(0 == me->spi_transmit_receive(&cmd, NULL, 1), BS_ERROR);
-
-  bsp_delay_ms(2);
+  bsp_delay_ms(2); // Decode delay
   bsp_gpio_write(IO_AFE_CS, 1);
 
   return BS_OK;

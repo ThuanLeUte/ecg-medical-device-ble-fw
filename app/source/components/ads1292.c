@@ -56,10 +56,10 @@ base_status_t ads1292_init(ads1292_t *me)
     return BS_ERROR;
 
   // Write init setting
-//  for (uint8_t i = 0; i < (sizeof(ADS1292_SETTING_LIST) / sizeof(ADS1292_SETTING_LIST[0])); i++)
-//  {
-//    m_ads1292_write_reg(me, ADS1292_SETTING_LIST[i].reg, ADS1292_SETTING_LIST[i].value);
-//  }
+  for (uint8_t i = 0; i < (sizeof(ADS1292_SETTING_LIST) / sizeof(ADS1292_SETTING_LIST[0])); i++)
+  {
+    m_ads1292_write_reg(me, ADS1292_SETTING_LIST[i].reg, ADS1292_SETTING_LIST[i].value);
+  }
 
   return BS_OK;
 }

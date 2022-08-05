@@ -78,34 +78,6 @@ base_status_t ads1292_start_convert(ads1292_t *me, bool enable);
  */
 base_status_t ads1292_read_ecg(ads1292_t *me, uint8_t *data);
 
-/**
- * @brief         ADS1292 set sampling state
- *
- * @param[in]     me       Pointer to handle of ADS1292 module.
- * @param[in]     state    BS_TRUE:  Start sampling
- *                         BS_FALSE: Stop sampling
- * @attention     None
- *
- * @return
- * - BS_OK
- * - BS_ERROR
- */
-base_status_t ads1292_set_sampling_state(ads1292_t *me, bool_t state);
-
-/**
- * @brief         ADS1292 set sampling rate
- *
- * @param[in]     me        Pointer to handle of ADS1292 module.
- * @param[in]     rate      Sampling rate
- *
- * @attention     None
- *
- * @return
- * - BS_OK
- * - BS_ERROR
- */
-base_status_t ads1292_set_sampling_rate(ads1292_t *me, uint16_t rate);
-
 /* -------------------------------------------------------------------------- */
 #ifdef __cplusplus
 } // extern "C"

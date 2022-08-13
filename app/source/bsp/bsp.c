@@ -133,7 +133,7 @@ static void m_bsp_spi_init(void)
   spi_config.mosi_pin  = IO_AFE_MOSI;
   spi_config.miso_pin  = IO_AFE_MISO;
   spi_config.sck_pin   = IO_AFE_SCLK;
-  spi_config.mode      = NRF_DRV_SPI_MODE_1;
+  spi_config.mode      = NRF_DRV_SPI_MODE_0;
   spi_config.frequency = NRF_DRV_SPI_FREQ_1M;
 
   err_code = nrf_drv_spi_init(&m_spi, &spi_config, NULL, NULL);

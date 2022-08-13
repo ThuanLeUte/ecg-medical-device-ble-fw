@@ -46,6 +46,7 @@
 #if defined(UARTE_PRESENT)
 #include "nrf_uarte.h"
 #endif
+#include "w25n01.h"
 
 /* Private defines ---------------------------------------------------- */
 #define APP_BLE_CONN_CFG_TAG            1                                          /**< A tag identifying the SoftDevice BLE configuration. */
@@ -141,7 +142,9 @@ int main(void)
 
   bsp_hw_init(); // Bsp init
 
-  bsp_afe_init();
+  w25n01_init();
+
+  // bsp_afe_init();
 
   bsp_bm_init();
 
@@ -168,6 +171,8 @@ int main(void)
       
       NRF_LOG_RAW_INFO("%d\n", signal_val[0]);
     }
+
+    bsp_delay_ms(1000);
   }
 }
 

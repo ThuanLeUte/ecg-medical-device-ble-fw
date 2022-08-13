@@ -428,6 +428,11 @@
               <FileType>1</FileType>
               <FilePath>..\source\ble\ble_ecg.c</FilePath>
             </File>
+            <File>
+              <FileName>w25n01.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\source\components\w25n01.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4089,6 +4094,11 @@
               <FileName>ble_ecg.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\source\ble\ble_ecg.c</FilePath>
+            </File>
+            <File>
+              <FileName>w25n01.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\source\components\w25n01.c</FilePath>
             </File>
           </Files>
         </Group>

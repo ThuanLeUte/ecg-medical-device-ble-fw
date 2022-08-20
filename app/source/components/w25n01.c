@@ -49,20 +49,25 @@
 /* Public variables --------------------------------------------------- */
 /* Private variables -------------------------------------------------- */
 /* Private function prototypes ---------------------------------------- */
+static base_status_t m_w25n01_transfer(w25n01_t *me, uint8_t *tx_data, uint8_t *rx_data, uint16_t len);
+static base_status_t m_w25n01_set_status_register(w25n01_t *me, uint8_t reg, uint8_t value);
+static base_status_t m_w25n01_get_status_register(w25n01_t *me, uint8_t reg, uint8_t *value);
+static base_status_t m_w25n01_write_enable(w25n01_t *me, bool enable);
+
 /* Function definitions ----------------------------------------------- */
-base_status_t w25n01_init(w25n01_t *me);
+base_status_t w25n01_init(w25n01_t *me)
 {
   ASSERT(me != NULL);
-  ASSERT(me->bsp_gpio_write != NULL);
+  ASSERT(me->gpio_write != NULL);
   ASSERT(me->spi_transfer != NULL);
 
   uint8_t jedec[5] = { W25N_JEDEC_ID, 0x00, 0x00, 0x00, 0x00 };
 
-  CHECK_STATUS(m_w25n01_transfer(jedec, jedec, sizeof(jedec)));
+  CHECK_STATUS(m_w25n01_transfer(me, jedec, jedec, sizeof(jedec)));
 
   if (jedec[2] == WINBOND_MAN_ID)
   {
-    if ((uint16_t)(jedec_receive[3] << 8 | jedec_receive[4]) == W25N01GV_DEV_ID)
+    if ((uint16_t)(jedec[3] << 8 | jedec[4]) == W25N01GV_DEV_ID)
     {
       return BS_OK;
     }
@@ -79,13 +84,13 @@ base_status_t w25n01_block_erase(w25n01_t *me, uint32_t page_addr)
   uint8_t page_low   = page_addr;
   uint8_t cmd_buf[4] = { W25N_OP_BLOCK_ERASE, 0x00, page_high, page_low };
 
-  CHECK_STATUS(m_w25n01_write_enable(true));
-  CHECK_STATUS(m_w25n01_transfer(cmd_buf, NULL, sizeof(cmd_buf)));
+  CHECK_STATUS(m_w25n01_write_enable(me, true));
+  CHECK_STATUS(m_w25n01_transfer(me, cmd_buf, NULL, sizeof(cmd_buf)));
   
   return BS_OK;
 }
 
-base_status_t w25n01_load_program_data(w25n01_t *me, uint8_t *p_data, uint16_t column_addr, uint32_t len)
+base_status_t w25n01_load_program_data(w25n01_t *me, uint16_t column_addr, uint8_t *p_data, uint32_t len)
 {
   ASSERT(column_addr <= W25N_MAX_COLUMN);
   ASSERT(len <= W25N_MAX_COLUMN - column_addr);
@@ -94,18 +99,18 @@ base_status_t w25n01_load_program_data(w25n01_t *me, uint8_t *p_data, uint16_t c
   uint8_t column_low  = column_addr & 0xFF;
   uint8_t cmd_buf[3]  = { W25N_OP_PROG_DATA_LOAD, column_high, column_low };
 
-  CHECK_STATUS(m_w25n01_write_enable(true));
+  CHECK_STATUS(m_w25n01_write_enable(me, true));
 
   // Write data
-  me->bsp_gpio_write(IO_AFE_CS, 0);
+  me->gpio_write(IO_AFE_CS, 0);
   CHECK_STATUS(me->spi_transfer(cmd_buf, NULL, sizeof(cmd_buf)));
   CHECK_STATUS(me->spi_transfer(p_data, NULL, len));
-  me->bsp_gpio_write(IO_AFE_CS, 1);
+  me->gpio_write(IO_AFE_CS, 1);
 
   return BS_OK;
 }
 
-base_status_t w25n01_program_execute(w25n01_t *me, uint8_t page_addr)
+base_status_t w25n01_program_execute(w25n01_t *me, uint32_t page_addr)
 {
   ASSERT(page_addr <= W25N01GV_MAX_PAGE);
 
@@ -113,49 +118,80 @@ base_status_t w25n01_program_execute(w25n01_t *me, uint8_t page_addr)
   uint8_t page_low   = page_addr;
   uint8_t cmd_buf[4] = { W25N_OP_PROG_EXECUTE, 0x00, page_high, page_low };
 
-  CHECK_STATUS(m_w25n01_write_enable(true));
-  CHECK_STATUS(m_w25n01_transfer(cmd_buf, NULL, sizeof(cmd_buf)));
+  CHECK_STATUS(m_w25n01_write_enable(me, true));
+  CHECK_STATUS(m_w25n01_transfer(me, cmd_buf, NULL, sizeof(cmd_buf)));
+
+  return BS_OK;
+}
+
+base_status_t w25n01_page_data_read(w25n01_t *me, uint32_t page_addr)
+{
+  ASSERT(page_addr <= W25N01GV_MAX_PAGE);
+
+  uint8_t page_high  = (page_addr & 0xFF00) >> 8;
+  uint8_t page_low   = page_addr;
+  uint8_t cmd_buf[4] = { W25N_OP_PAGE_DATA_READ, 0x00, page_high, page_low };
+
+  CHECK_STATUS(m_w25n01_transfer(me, cmd_buf, NULL, sizeof(cmd_buf)));
+
+  return BS_OK;
+}
+
+base_status_t w25n01_read_data(w25n01_t *me, uint16_t column_addr, uint8_t *p_data, uint32_t len)
+{
+  ASSERT(column_addr <= W25N_MAX_COLUMN);
+  ASSERT(len <= W25N_MAX_COLUMN - column_addr);
+
+  uint8_t column_high  = (column_addr & 0xFF00) >> 8;
+  uint8_t column_low   = column_addr;
+  uint8_t cmd_buf[4] = { W25N_OP_READ, column_high, column_low, 0x00 };
+
+  // Read data
+  me->gpio_write(IO_AFE_CS, 0);
+  CHECK_STATUS(me->spi_transfer(cmd_buf, NULL, sizeof(cmd_buf)));
+  CHECK_STATUS(me->spi_transfer(p_data, p_data, len));
+  me->gpio_write(IO_AFE_CS, 1);
 
   return BS_OK;
 }
 
 /* Private function definitions ---------------------------------------- */
-base_status_t m_w25n01_transfer(w25n01_t *me, uint8_t *tx_data, uint8_t *rx_data, uint16_t len)
+static base_status_t m_w25n01_transfer(w25n01_t *me, uint8_t *tx_data, uint8_t *rx_data, uint16_t len)
 {
   base_status_t ret;
 
-  me->bsp_gpio_write(IO_AFE_CS, 0);
+  me->gpio_write(IO_AFE_CS, 0);
   ret = me->spi_transfer(tx_data, rx_data, len);
-  me->bsp_gpio_write(IO_AFE_CS, 1);
+  me->gpio_write(IO_AFE_CS, 1);
 
   return ret;
 }
 
-base_status_t m_w25n01_set_status_register(w25n01_t *me, uint8_t reg, uint8_t value)
+static base_status_t m_w25n01_set_status_register(w25n01_t *me, uint8_t reg, uint8_t value)
 {
-  uint8_t buf[3] = { W25N_WRITE_STATUS_REG, reg, value };
+  uint8_t cmd_buf[3] = { W25N_OP_WRITE_STATUS_REG, reg, value };
 
-  return m_w25n01_transfer(me, &buf, NULL, sizeof(buf));
+  return m_w25n01_transfer(me, cmd_buf, NULL, sizeof(cmd_buf));
 }
 
-base_status_t m_w25n01_get_status_register(w25n01_t *me, uint8_t reg, uint8_t *value)
+static base_status_t m_w25n01_get_status_register(w25n01_t *me, uint8_t reg, uint8_t *value)
 {
-  uint8_t buf[3] = { W25N_READ_STATUS_REG, reg, 0x00 };
+  uint8_t cmd_buf[3] = { W25N_OP_READ_STATUS_REG, reg, 0x00 };
 
-  CHECK_STATUS(m_w25n01_transfer(me, &buf, &buf, sizeof(buf)));
-  *value = buf[2];
+  CHECK_STATUS(m_w25n01_transfer(me, cmd_buf, cmd_buf, sizeof(cmd_buf)));
+  *value = cmd_buf[2];
 
   return BS_OK;
 }
 
-base_status_t m_w25n01_write_enable(w25n01_t *me, bool enable)
+static base_status_t m_w25n01_write_enable(w25n01_t *me, bool enable)
 {
   uint8_t value;
 
   if (enable)
-    value = W25N_WRITE_ENABLE;
+    value = W25N_OP_WRITE_ENABLE;
   else
-    value = W25N_WRITE_DISABLE;
+    value = W25N_OP_WRITE_DISABLE;
 
   return m_w25n01_transfer(me, &value, NULL, 1);
 }

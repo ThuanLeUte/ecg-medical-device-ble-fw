@@ -433,6 +433,11 @@
               <FileType>1</FileType>
               <FilePath>..\source\components\w25n01.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_nand_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\source\bsp\bsp_nand_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4099,6 +4104,11 @@
               <FileName>w25n01.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\source\components\w25n01.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_nand_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\source\bsp\bsp_nand_flash.c</FilePath>
             </File>
           </Files>
         </Group>

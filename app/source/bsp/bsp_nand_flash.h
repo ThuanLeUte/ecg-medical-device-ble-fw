@@ -1,43 +1,35 @@
 /**
- * @file       w25n01.h
+ * @file       bsp_nand_flash.h
  * @copyright  Copyright (C) 2020 Hydratech. All rights reserved.
  * @license    This project is released under the Hydratech License.
  * @version    1.0.0
- * @date       2021-04-09
+ * @date       2021-09-05
  * @author     Thuan Le
- * @brief      SERIAL SLC NAND FLASH MEMORY
+ * @brief      Board Support Package for Nand Flash
  * @note       None
  * @example    None
  */
 
 /* Define to prevent recursive inclusion ------------------------------ */
-#ifndef __W25N01_H
-#define __W25N01_H
+#ifndef __BSP_NAND_FLASH_H
+#define __BSP_NAND_FLASH_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Includes ----------------------------------------------------------- */
-#include "bsp/bsp.h"
+#include "w25n01.h"
 
 /* Public defines ----------------------------------------------------- */
 /* Public enumerate/structure ----------------------------------------- */
-/**
- * @brief DS2728 sensor struct
- */
-typedef struct 
-{
-  void (*gpio_write)(uint8_t pin , uint8_t state);
-  base_status_t  (*spi_transfer)(uint8_t *tx_data, uint8_t *rx_data, uint16_t len);
-}
-w25n01_t;
-
+/* Public macros ------------------------------------------------------ */
+/* Public variables --------------------------------------------------- */
 /* Public function prototypes ----------------------------------------- */
 /**
- * @brief         W25N01 init
+ * @brief         BSP Nand Flash init
  *
- * @param[in]     me    Pointer to handle of W25N01 module
+ * @param[in]     None
  *
  * @attention     None
  *
@@ -45,12 +37,12 @@ w25n01_t;
  * - BS_OK
  * - BS_ERROR
  */
-base_status_t w25n01_init(w25n01_t *me);
+base_status_t bsp_nand_flash_init(void);
 
 /* -------------------------------------------------------------------------- */
 #ifdef __cplusplus
 } // extern "C"
 #endif
-#endif // __W25N01_H
+#endif // __BSP_NAND_FLASH_H
 
 /* End of file -------------------------------------------------------- */

@@ -39,6 +39,7 @@
 #include "nrf52832_peripherals.h"
 #include "bsp/bsp_afe.h"
 #include "bsp/bsp_bm.h"
+#include "bsp/bsp_nand_flash.h"
 
 #if defined(UART_PRESENT)
 #include "nrf_uart.h"
@@ -142,7 +143,7 @@ int main(void)
 
   bsp_hw_init(); // Bsp init
 
-  w25n01_init();
+  bsp_nand_flash_init();
 
   // bsp_afe_init();
 

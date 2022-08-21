@@ -46,6 +46,11 @@ w25n01_t;
  * - BS_ERROR
  */
 base_status_t w25n01_init(w25n01_t *me);
+base_status_t w25n01_block_erase(w25n01_t *me, uint32_t page_addr);
+base_status_t w25n01_load_program_data(w25n01_t *me, uint16_t column_addr, uint8_t *p_data, uint32_t len);
+base_status_t w25n01_program_execute(w25n01_t *me, uint32_t page_addr);
+base_status_t w25n01_page_data_read(w25n01_t *me, uint32_t page_addr);
+base_status_t w25n01_read_data(w25n01_t *me, uint16_t column_addr, uint8_t *p_data, uint32_t len);
 
 /* -------------------------------------------------------------------------- */
 #ifdef __cplusplus

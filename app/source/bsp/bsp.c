@@ -64,7 +64,7 @@ base_status_t bsp_spi_transmit_receive(uint8_t *tx_data, uint8_t *rx_data, uint1
   if (nrf_drv_spi_transfer(&m_spi, tx_data, len, rx_data, len) != NRF_SUCCESS)
     return BS_ERROR;
   
-  return BS_TRUE;
+  return BS_OK;
 }
 
 void bsp_delay_ms(uint32_t ms)

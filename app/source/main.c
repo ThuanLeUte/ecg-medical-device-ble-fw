@@ -159,7 +159,7 @@ int main(void)
   {
     NRF_LOG_PROCESS();
           
-    if (nrf_gpio_pin_read(IO_AFE_DRDY) == false)
+// if (nrf_gpio_pin_read(IO_AFE_DRDY) == false)
     {
       bsp_afe_get_ecg(signal_val);
 
@@ -167,6 +167,7 @@ int main(void)
       ecg_channel_buf[index + 1] = signal_val[1];
       
       NRF_LOG_RAW_INFO("%d\n", signal_val[0]);
+     bsp_delay_ms(500);
     }
   }
 }

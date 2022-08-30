@@ -94,69 +94,88 @@ base_status_t ads1292_init(ads1292_t *me)
   // }
 
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_CONFIG1, &value_0, 1));
-  CHECK_STATUS(m_ads1292_write_reg(me, ADS1292_REG_CONFIG1, 0x01));
+  CHECK_STATUS(m_ads1292_write_reg(me, ADS1292_REG_CONFIG1, 0x00));
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_CONFIG1, &value_0, 1));
-  if (value_0 != 0x01)
+  bsp_delay_ms(200);
+  if (value_0 != 0x00)
     return BS_ERROR;
 
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_CONFIG2, &value_0, 1));
-  CHECK_STATUS(m_ads1292_write_reg(me, ADS1292_REG_CONFIG2, 0xa3));
+  CHECK_STATUS(m_ads1292_write_reg(me, ADS1292_REG_CONFIG2, 0xA0));
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_CONFIG2, &value_0, 1));
-  if (value_0 != 0xa3)
+  bsp_delay_ms(200);
+
+  if (value_0 != 0xA0)
     return BS_ERROR;
 
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_LOFF, &value_0, 1));
   CHECK_STATUS(m_ads1292_write_reg(me, ADS1292_REG_LOFF, 0x10));
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_LOFF, &value_0, 1));
+  bsp_delay_ms(200);
+
   if (value_0 != 0x10)
     return BS_ERROR;
 
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_CH1SET, &value_0, 1));
-  CHECK_STATUS(m_ads1292_write_reg(me, ADS1292_REG_CH1SET, 0x81));
+  CHECK_STATUS(m_ads1292_write_reg(me, ADS1292_REG_CH1SET, 0x40));
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_CH1SET, &value_0, 1));
-  if (value_0 != 0x81)
+  bsp_delay_ms(200);
+
+  if (value_0 != 0x40)
     return BS_ERROR;
 
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_CH2SET, &value_0, 1));
   CHECK_STATUS(m_ads1292_write_reg(me, ADS1292_REG_CH2SET, 0x60));
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_CH2SET, &value_0, 1));
+  bsp_delay_ms(200);
+
   if (value_0 != 0x60)
     return BS_ERROR;
 
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_RLDSENS, &value_0, 1));
-  CHECK_STATUS(m_ads1292_write_reg(me, ADS1292_REG_RLDSENS, 0x20));
+  CHECK_STATUS(m_ads1292_write_reg(me, ADS1292_REG_RLDSENS, 0x2C));
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_RLDSENS, &value_0, 1));
-  if (value_0 != 0x20)
+  bsp_delay_ms(200);
+
+  if (value_0 != 0x2C)
     return BS_ERROR;
 
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_LOFFSENS, &value_0, 1));
   CHECK_STATUS(m_ads1292_write_reg(me, ADS1292_REG_LOFFSENS, 0x00));
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_LOFFSENS, &value_0, 1));
+  bsp_delay_ms(200);
+
   if (value_0 != 0x00)
     return BS_ERROR;
 
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_RESP1, &value_0, 1));
-  CHECK_STATUS(m_ads1292_write_reg(me, ADS1292_REG_RESP1, 0x00));
+  CHECK_STATUS(m_ads1292_write_reg(me, ADS1292_REG_RESP1, 0xF2));
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_RESP1, &value_0, 1));
-  if (value_0 != 0x00)
+  bsp_delay_ms(200);
+
+  if (value_0 != 0xF2)
     return BS_ERROR;
 
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_RESP2, &value_0, 1));
-  CHECK_STATUS(m_ads1292_write_reg(me, ADS1292_REG_RESP2, 0x02));
+  CHECK_STATUS(m_ads1292_write_reg(me, ADS1292_REG_RESP2, 0x03));
   CHECK_STATUS(m_ads1292_read_reg(me, ADS1292_REG_RESP2, &value_0, 1));
-  if (value_0 != 0x02)
+  bsp_delay_ms(200);
+
+  if (value_0 != 0x03)
     return BS_ERROR;
 
   CHECK_STATUS(m_ads1292_read_reg(me, 0x0B, &value_0, 1));
   CHECK_STATUS(m_ads1292_write_reg(me, 0x0B, 0x0C));
   CHECK_STATUS(m_ads1292_read_reg(me, 0x0B, &value_0, 1));
+  bsp_delay_ms(200);
+
   if (value_0 != 0x0C)
     return BS_ERROR;
 
   bsp_gpio_write(IO_AFE_START, 1);
-  bsp_delay_ms(20);
+  bsp_delay_ms(200);
   CHECK_STATUS(m_ads1292_send_cmd(me, ADS1292_CMD_RDATAC));
-  m_ads1292_send_cmd(me, ADS1292_CMD_START);
+//  m_ads1292_send_cmd(me, ADS1292_CMD_START);
 
   return BS_OK;
 }

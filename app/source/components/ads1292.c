@@ -175,7 +175,7 @@ base_status_t ads1292_init(ads1292_t *me)
   bsp_gpio_write(IO_AFE_START, 1);
   bsp_delay_ms(200);
   CHECK_STATUS(m_ads1292_send_cmd(me, ADS1292_CMD_RDATAC));
-//  m_ads1292_send_cmd(me, ADS1292_CMD_START);
+	m_ads1292_send_cmd(me, ADS1292_CMD_START);
 
   return BS_OK;
 }

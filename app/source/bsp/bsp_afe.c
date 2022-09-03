@@ -62,7 +62,7 @@ base_status_t bsp_afe_get_ecg(int32_t value[ADS_NUM_CHANNEL])
  */
 static base_status_t m_bsp_afe_read_channels(int32_t value[ADS_NUM_CHANNEL])
 {
-  m_ads1292_read_data(&m_ads1292, ads1292_buf, 27);
+  m_ads1292_read_data(&m_ads1292, ads1292_buf, 10);
 
   uint32_t tempData = (uint32_t)ads1292_buf[0] << 16;
   tempData |= (uint32_t)ads1292_buf[1] << 8;

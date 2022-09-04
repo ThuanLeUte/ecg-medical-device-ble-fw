@@ -24,7 +24,7 @@ static ads1292_t m_ads1292;
 
 /* Private function prototypes ---------------------------------------- */
 static base_status_t m_bsp_afe_read_channels(int32_t value[ADS_NUM_CHANNEL]);
-uint8_t ads1292_buf[27];
+uint8_t ads1292_buf[9];
 
 /* Function definitions ----------------------------------------------- */
 base_status_t bsp_afe_init(void)
@@ -62,7 +62,7 @@ base_status_t bsp_afe_get_ecg(int32_t value[ADS_NUM_CHANNEL])
  */
 static base_status_t m_bsp_afe_read_channels(int32_t value[ADS_NUM_CHANNEL])
 {
-  m_ads1292_read_data(&m_ads1292, ads1292_buf, 10);
+  m_ads1292_read_data(&m_ads1292, ads1292_buf, 9);
 
   uint32_t tempData = (uint32_t)ads1292_buf[0] << 16;
   tempData |= (uint32_t)ads1292_buf[1] << 8;

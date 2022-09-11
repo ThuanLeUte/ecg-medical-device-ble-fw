@@ -37,8 +37,10 @@
 #include "ble/ble_ecg.h"
 #include "bsp.h"
 #include "nrf52832_peripherals.h"
-#include "bsp/bsp_afe.h"
 #include "bsp/bsp_bm.h"
+
+#include "ads1292r.h"
+#include "ecg_res_algo.h"
 
 #if defined(UART_PRESENT)
 #include "nrf_uart.h"
@@ -122,6 +124,12 @@ static void dis_service_init(void);
 
 static void application_timers_start(void);
 
+volatile uint8_t globalHeartRate = 0;
+volatile uint8_t globalRespirationRate = 0;
+
+int16_t ecgWaveBuff, ecgFilterout;
+int16_t resWaveBuff, respFilterout;
+
 /* Function definitions ----------------------------------------------- */
 /**
  * @brief Application main function.
@@ -141,32 +149,39 @@ int main(void)
 
   bsp_hw_init(); // Bsp init
 
-  bsp_afe_init();
+  //battery_level_update();
 
-  bsp_bm_init();
-
-  battery_level_update();
-
+  // NRF_LOG_RAW_INFO("%d\n", signal_val[0]);
   // Start execution.
-  application_timers_start();
-  advertising_start();
-
-  int32_t signal_val[ADS_NUM_CHANNEL];
-  int16_t ecg_channel_buf[200];
-  int16_t index = 0;
+  // application_timers_start();
+  // advertising_start();
+  ads1292Init(IO_AFE_CS, IO_AFE_RST, IO_AFE_START);
 
   for (;;)
   {
     NRF_LOG_PROCESS();
 
-    if (nrf_gpio_pin_read(IO_AFE_DRDY) == false)
-    {
-      bsp_afe_get_ecg(signal_val);
+    ads1292OutputValues ecgRespirationValues;
 
-      ecg_channel_buf[index]     = signal_val[0];
-      ecg_channel_buf[index + 1] = signal_val[1];
-      
-      NRF_LOG_RAW_INFO("%d\n", signal_val[0]);
+    bool ret = getAds1292EcgAndRespirationSamples(IO_AFE_DRDY, IO_AFE_CS, &ecgRespirationValues);
+    if (ret == true)
+    {
+      ecgWaveBuff = (int16_t)(ecgRespirationValues.sDaqVals[1] >> 8); // ignore the lower 8 bits out of 24bits
+      resWaveBuff = (int16_t)(ecgRespirationValues.sresultTempResp >> 8);
+
+      if (ecgRespirationValues.leadoffDetected == false)
+      {
+        ECG_ProcessCurrSample(&ecgWaveBuff, &ecgFilterout);      // filter out the line noise @40Hz cutoff 161 order
+        QRS_Algorithm_Interface(ecgFilterout, &globalHeartRate); // calculate
+      }
+      else
+      {
+        ecgFilterout = 0;
+        respFilterout = 0;
+      }
+
+      // Serial.println(ecgFilterout);
+      NRF_LOG_RAW_INFO("%d\n", ecgFilterout);
     }
   }
 }

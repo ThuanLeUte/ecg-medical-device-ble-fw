@@ -20,6 +20,7 @@
 #define BSP_PORTING_H
 
 #include "Arduino.h"
+#include <SPI.h>
 
 bool bsp_porting_read_pin(uint8_t pin);
 void bsp_porting_write_pin(uint8_t pin, bool enable);

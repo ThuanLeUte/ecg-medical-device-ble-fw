@@ -16,10 +16,7 @@
 //   Downloaded from Processing IDE Sketch->Import Library->Add Library->G4P Install
 //
 /////////////////////////////////////////////////////////////////////////////////////////
-#include "Arduino.h"
 #include "ads1292r.h"
-#include <SPI.h>
-#include "bsp_porting.h"
 
 int j,i;
 

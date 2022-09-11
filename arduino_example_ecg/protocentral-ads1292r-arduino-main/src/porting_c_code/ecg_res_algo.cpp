@@ -1,7 +1,4 @@
-#include "Arduino.h"
-#include "ads1292r.h"
 #include "ecg_res_algo.h"
-#include <SPI.h>
 
 unsigned char Start_Sample_Count_Flag = 0;
 unsigned char first_peak_detect = FALSE ;

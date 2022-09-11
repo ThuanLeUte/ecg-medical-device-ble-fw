@@ -1,7 +1,7 @@
 #ifndef ecgRespirationAlgo_h
 #define ecgRespirationAlgo_h
 
-#include "Arduino.h"
+#include "ads1292r.h"
 
 #define TEMPERATURE 0
 #define FILTERORDER         161

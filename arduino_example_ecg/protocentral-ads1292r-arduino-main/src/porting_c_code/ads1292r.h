@@ -62,25 +62,22 @@ typedef struct Record{
   signed long sresultTempResp;
 }ads1292OutputValues;
 
-class ads1292r
-{
-  public:
-    boolean getAds1292EcgAndRespirationSamples(const int dataReady,const int chipSelect,ads1292OutputValues *ecgRespirationValues);
-    static void ads1292Init(const int chipSelect,const int pwdnPin,const int startPin);
-    static void ads1292Reset(const int pwdnPin);
+// Publish
+boolean getAds1292EcgAndRespirationSamples(const int dataReady, const int chipSelect, ads1292OutputValues *ecgRespirationValues);
+void ads1292Init(const int chipSelect, const int pwdnPin, const int startPin);
+void ads1292Reset(const int pwdnPin);
 
-  private:
-	  static void ads1292RegWrite (unsigned char READ_WRITE_ADDRESS, unsigned char DATA,const int chipSelect);
-    static void ads1292SPICommandData(unsigned char dataIn,const int chipSelect);
-    static void ads1292DisableStart(const int startPin);
-    static void ads1292EnableStart(const int startPin);
-    static void ads1292HardStop (const int startPin);
-    static void ads1292StartDataConvCommand (const int chipSelect);
-    static void ads1292SoftStop (const int chipSelect);
-    static void ads1292StartReadDataContinuous (const int chipSelect);
-    static void ads1292StopReadDataContinuous (const int chipSelect);
-    static char* ads1292ReadData(const int chipSelect);
-    static void ads1292RegRead(unsigned char READ_ADDRESS, unsigned char *DATA, const int chipSelect);
-};
+// Private
+void ads1292RegWrite(unsigned char READ_WRITE_ADDRESS, unsigned char DATA, const int chipSelect);
+void ads1292SPICommandData(unsigned char dataIn, const int chipSelect);
+void ads1292DisableStart(const int startPin);
+void ads1292EnableStart(const int startPin);
+void ads1292HardStop(const int startPin);
+void ads1292StartDataConvCommand(const int chipSelect);
+void ads1292SoftStop(const int chipSelect);
+void ads1292StartReadDataContinuous(const int chipSelect);
+void ads1292StopReadDataContinuous(const int chipSelect);
+char *ads1292ReadData(const int chipSelect);
+void ads1292RegRead(unsigned char READ_ADDRESS, unsigned char *DATA, const int chipSelect);
 
 #endif

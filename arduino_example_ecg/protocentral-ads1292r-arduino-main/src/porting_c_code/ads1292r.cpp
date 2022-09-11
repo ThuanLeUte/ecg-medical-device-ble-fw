@@ -17,7 +17,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////
 #include "Arduino.h"
-#include "protocentralAds1292r.h"
+#include "ads1292r.h"
 #include <SPI.h>
 
 int j,i;
@@ -36,7 +36,7 @@ long statusByte=0;
 
 uint8_t LeadStatus=0;
 
-boolean ads1292r::getAds1292EcgAndRespirationSamples(const int dataReady,const int chipSelect,ads1292OutputValues *ecgRespirationValues)
+boolean getAds1292EcgAndRespirationSamples(const int dataReady,const int chipSelect,ads1292OutputValues *ecgRespirationValues)
 {
 
   if ((digitalRead(dataReady)) == LOW)      // Sampling rate is set to 125SPS ,DRDY ticks for every 8ms
@@ -90,7 +90,7 @@ boolean ads1292r::getAds1292EcgAndRespirationSamples(const int dataReady,const i
     return false;
 }
 
-char* ads1292r::ads1292ReadData(const int chipSelect)
+char* ads1292ReadData(const int chipSelect)
 {
   static char SPI_Dummy_Buff[10];
   digitalWrite(chipSelect, LOW);
@@ -104,7 +104,7 @@ char* ads1292r::ads1292ReadData(const int chipSelect)
   return SPI_Dummy_Buff;
 }
 
-void ads1292r::ads1292Init(const int chipSelect,const int pwdnPin,const int startPin)
+void ads1292Init(const int chipSelect,const int pwdnPin,const int startPin)
 {
   unsigned char ads_id;
   // start the SPI library:
@@ -145,7 +145,7 @@ void ads1292r::ads1292Init(const int chipSelect,const int pwdnPin,const int star
   ads1292EnableStart(startPin);
 }
 
-void ads1292r::ads1292Reset(const int pwdnPin)
+void ads1292Reset(const int pwdnPin)
 {
   digitalWrite(pwdnPin, HIGH);
   delay(100);					// Wait 100 mSec
@@ -155,45 +155,45 @@ void ads1292r::ads1292Reset(const int pwdnPin)
   delay(100);
 }
 
-void ads1292r::ads1292DisableStart(const int startPin)
+void ads1292DisableStart(const int startPin)
 {
   digitalWrite(startPin, LOW);
   delay(20);
 }
 
-void ads1292r::ads1292EnableStart(const int startPin)
+void ads1292EnableStart(const int startPin)
 {
   digitalWrite(startPin, HIGH);
   delay(20);
 }
 
-void ads1292r::ads1292HardStop (const int startPin)
+void ads1292HardStop (const int startPin)
 {
   digitalWrite(startPin, LOW);
   delay(100);
 }
 
-void ads1292r::ads1292StartDataConvCommand (const int chipSelect)
+void ads1292StartDataConvCommand (const int chipSelect)
 {
   ads1292SPICommandData(START,chipSelect);					// Send 0x08 to the ADS1x9x
 }
 
-void ads1292r::ads1292SoftStop (const int chipSelect)
+void ads1292SoftStop (const int chipSelect)
 {
   ads1292SPICommandData(STOP,chipSelect);                   // Send 0x0A to the ADS1x9x
 }
 
-void ads1292r::ads1292StartReadDataContinuous (const int chipSelect)
+void ads1292StartReadDataContinuous (const int chipSelect)
 {
   ads1292SPICommandData(RDATAC,chipSelect);					// Send 0x10 to the ADS1x9x
 }
 
-void ads1292r::ads1292StopReadDataContinuous (const int chipSelect)
+void ads1292StopReadDataContinuous (const int chipSelect)
 {
   ads1292SPICommandData(SDATAC,chipSelect);					// Send 0x11 to the ADS1x9x
 }
 
-void ads1292r::ads1292SPICommandData(unsigned char dataIn,const int chipSelect)
+void ads1292SPICommandData(unsigned char dataIn,const int chipSelect)
 {
   byte data[1];
   //data[0] = dataIn;
@@ -209,7 +209,7 @@ void ads1292r::ads1292SPICommandData(unsigned char dataIn,const int chipSelect)
 }
 
 //Sends a write command to SCP1000
-void ads1292r::ads1292RegWrite (unsigned char READ_WRITE_ADDRESS, unsigned char DATA,const int chipSelect)
+void ads1292RegWrite (unsigned char READ_WRITE_ADDRESS, unsigned char DATA,const int chipSelect)
 {
 
   switch (READ_WRITE_ADDRESS)
@@ -261,7 +261,7 @@ void ads1292r::ads1292RegWrite (unsigned char READ_WRITE_ADDRESS, unsigned char 
   digitalWrite(chipSelect, HIGH);
 }
 
-void ads1292r::ads1292RegRead(unsigned char READ_ADDRESS, unsigned char *DATA, const int chipSelect)
+void ads1292RegRead(unsigned char READ_ADDRESS, unsigned char *DATA, const int chipSelect)
 {
   byte dataToSend = READ_ADDRESS | RREG;
   digitalWrite(chipSelect, LOW);

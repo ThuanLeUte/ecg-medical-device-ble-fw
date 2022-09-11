@@ -1,6 +1,6 @@
 #include "Arduino.h"
-#include "protocentralAds1292r.h"
-#include "ecgRespirationAlgo.h"
+#include "ads1292r.h"
+#include "ecg_res_algo.h"
 #include <SPI.h>
 
 unsigned char Start_Sample_Count_Flag = 0;
@@ -68,7 +68,7 @@ int16_t RespCoeffBuf[FILTERORDER] = { 120,    124,    126,    127,    127,    12
                                       118,    122,    125,    127,    127,    126,    124,    120       };
 
 
-void ecg_respiration_algorithm :: ECG_FilterProcess(int16_t * WorkingBuff, int16_t * CoeffBuf, int16_t* FilterOut)
+void ECG_FilterProcess(int16_t * WorkingBuff, int16_t * CoeffBuf, int16_t* FilterOut)
 {
   int32_t acc = 0;   // accumulator for MACs
   int  k;
@@ -93,7 +93,7 @@ void ecg_respiration_algorithm :: ECG_FilterProcess(int16_t * WorkingBuff, int16
   *FilterOut = (int16_t)(acc >> 15);
 }
 
-void ecg_respiration_algorithm :: ECG_ProcessCurrSample(int16_t *CurrAqsSample, int16_t *FilteredOut)
+void ECG_ProcessCurrSample(int16_t *CurrAqsSample, int16_t *FilteredOut)
 {
   static uint16_t ECG_bufStart = 0, ECG_bufCur = FILTERORDER - 1, ECGFirstFlag = 1;
   static int16_t ECG_Pvev_DC_Sample, ECG_Pvev_Sample;/* Working Buffer Used for Filtering*/
@@ -141,7 +141,7 @@ void ecg_respiration_algorithm :: ECG_ProcessCurrSample(int16_t *CurrAqsSample, 
   return ;
 }
 
-void ecg_respiration_algorithm :: QRS_Algorithm_Interface(int16_t CurrSample,volatile uint8_t *Heart_rate)
+void QRS_Algorithm_Interface(int16_t CurrSample,volatile uint8_t *Heart_rate)
 {
   static int16_t prev_data[32] = {0};
   int16_t i;
@@ -165,7 +165,7 @@ void ecg_respiration_algorithm :: QRS_Algorithm_Interface(int16_t CurrSample,vol
   QRS_process_buffer(Heart_rate);
 }
 
-void ecg_respiration_algorithm :: QRS_process_buffer(volatile uint8_t *Heart_rate)
+void QRS_process_buffer(volatile uint8_t *Heart_rate)
 {
   int16_t first_derivative = 0 ;
   int16_t scaled_result = 0 ;
@@ -204,7 +204,7 @@ void ecg_respiration_algorithm :: QRS_process_buffer(volatile uint8_t *Heart_rat
 }
 
 
-void ecg_respiration_algorithm :: QRS_check_sample_crossing_threshold( uint16_t scaled_result,volatile uint8_t *Heart_rate)
+void QRS_check_sample_crossing_threshold( uint16_t scaled_result,volatile uint8_t *Heart_rate)
 {
   /* array to hold the sample indexes S1,S2,S3 etc */
   static uint16_t s_array_index = 0 ;
@@ -364,7 +364,7 @@ void ecg_respiration_algorithm :: QRS_check_sample_crossing_threshold( uint16_t 
   *Heart_rate = (uint8_t)QRS_Heart_Rate;  
 }
 
-void ecg_respiration_algorithm :: Resp_FilterProcess(int16_t * RESP_WorkingBuff, int16_t * CoeffBuf, int16_t* FilterOut)
+void Resp_FilterProcess(int16_t * RESP_WorkingBuff, int16_t * CoeffBuf, int16_t* FilterOut)
 {
   int32_t acc=0;     // accumulator for MACs
   int  k;
@@ -388,7 +388,7 @@ void ecg_respiration_algorithm :: Resp_FilterProcess(int16_t * RESP_WorkingBuff,
   *FilterOut = (int16_t)(acc >> 15);
 }
 
-int16_t ecg_respiration_algorithm :: Resp_ProcessCurrSample(int16_t CurrAqsSample)
+int16_t Resp_ProcessCurrSample(int16_t CurrAqsSample)
 {
   static uint16_t bufStart=0, bufCur = FILTERORDER-1, FirstFlag = 1;    
   int16_t temp1, temp2;//, RESPData;
@@ -420,7 +420,7 @@ int16_t ecg_respiration_algorithm :: Resp_ProcessCurrSample(int16_t CurrAqsSampl
   return FiltOut;
 }
   
-void ecg_respiration_algorithm :: RESP_Algorithm_Interface(int16_t CurrSample,volatile uint8_t *RespirationRate)
+void RESP_Algorithm_Interface(int16_t CurrSample,volatile uint8_t *RespirationRate)
 {
   static int16_t prev_data[64] ={0};
   char i;
@@ -444,7 +444,7 @@ void ecg_respiration_algorithm :: RESP_Algorithm_Interface(int16_t CurrSample,vo
   Respiration_Rate_Detection(RESP_Second_Next_Sample,RespirationRate);
 }
 
-void ecg_respiration_algorithm :: Respiration_Rate_Detection(int16_t Resp_wave,volatile uint8_t *RespirationRate)
+void Respiration_Rate_Detection(int16_t Resp_wave,volatile uint8_t *RespirationRate)
 { 
   static uint16_t skipCount = 0, SampleCount = 0,TimeCnt=0, SampleCountNtve=0, PtiveCnt =0,NtiveCnt=0 ;
   static int16_t MinThreshold = 0x7FFF, MaxThreshold = 0x8000, PrevSample = 0, PrevPrevSample = 0, PrevPrevPrevSample =0;

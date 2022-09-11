@@ -19,6 +19,7 @@
 #include "Arduino.h"
 #include "ads1292r.h"
 #include <SPI.h>
+#include "bsp_porting.h"
 
 int j,i;
 
@@ -36,10 +37,10 @@ long statusByte=0;
 
 uint8_t LeadStatus=0;
 
-boolean getAds1292EcgAndRespirationSamples(const int dataReady,const int chipSelect,ads1292OutputValues *ecgRespirationValues)
+bool getAds1292EcgAndRespirationSamples(const int dataReady,const int chipSelect,ads1292OutputValues *ecgRespirationValues)
 {
 
-  if ((digitalRead(dataReady)) == LOW)      // Sampling rate is set to 125SPS ,DRDY ticks for every 8ms
+  if ((bsp_porting_read_pin(dataReady)) == false)      // Sampling rate is set to 125SPS ,DRDY ticks for every 8ms
   {
     SPI_RX_Buff_Ptr = ads1292ReadData(chipSelect); // Read the data,point the data to a pointer
 
@@ -50,7 +51,7 @@ boolean getAds1292EcgAndRespirationSamples(const int dataReady,const int chipSel
 
     ads1292dataReceived = true;
     //Serial.println(ads1292dataReceived);
-    //delay(1000);
+    //bsp_porting_delay(1000);
     j = 0;
 
     for (i = 3; i < 9; i += 3)         // data outputs is (24 status bits + 24 bits Respiration data +  24 bits ECG data)
@@ -93,14 +94,14 @@ boolean getAds1292EcgAndRespirationSamples(const int dataReady,const int chipSel
 char* ads1292ReadData(const int chipSelect)
 {
   static char SPI_Dummy_Buff[10];
-  digitalWrite(chipSelect, LOW);
+  bsp_porting_write_pin(chipSelect, false);
 
   for (int i = 0; i < 9; ++i)
   {
-    SPI_Dummy_Buff[i] = SPI.transfer(CONFIG_SPI_MASTER_DUMMY);
+    SPI_Dummy_Buff[i] = bsp_porting_spi_transfer(CONFIG_SPI_MASTER_DUMMY);
   }
 
-  digitalWrite(chipSelect, HIGH);
+  bsp_porting_write_pin(chipSelect, true);
   return SPI_Dummy_Buff;
 }
 
@@ -109,68 +110,68 @@ void ads1292Init(const int chipSelect,const int pwdnPin,const int startPin)
   unsigned char ads_id;
   // start the SPI library:
   ads1292Reset(pwdnPin);
-  delay(100);
+  bsp_porting_delay(100);
   ads1292DisableStart(startPin);
   ads1292EnableStart(startPin);
   ads1292HardStop(startPin);
   ads1292StartDataConvCommand(chipSelect);
   ads1292SoftStop(chipSelect);
-  delay(50);
+  bsp_porting_delay(50);
   ads1292StopReadDataContinuous(chipSelect);					// SDATAC command
-  delay(300);
+  bsp_porting_delay(300);
 
   ads1292RegRead(ADS1292_REG_ID, &ads_id, chipSelect);
   Serial.println(ads_id);
 
   ads1292RegWrite(ADS1292_REG_CONFIG1, 0x00,chipSelect); 		//Set sampling rate to 125 SPS
-  delay(10);
+  bsp_porting_delay(10);
   ads1292RegWrite(ADS1292_REG_CONFIG2, 0b10100000,chipSelect);	//Lead-off comp off, test signal disabled
-  delay(10);
+  bsp_porting_delay(10);
   ads1292RegWrite(ADS1292_REG_LOFF, 0b00010000,chipSelect);		//Lead-off defaults
-  delay(10);
+  bsp_porting_delay(10);
   ads1292RegWrite(ADS1292_REG_CH1SET, 0b01000000,chipSelect);	//Ch 1 enabled, gain 6, connected to electrode in
-  delay(10);
+  bsp_porting_delay(10);
   ads1292RegWrite(ADS1292_REG_CH2SET, 0b01100000,chipSelect);	//Ch 2 enabled, gain 6, connected to electrode in
-  delay(10);
+  bsp_porting_delay(10);
   ads1292RegWrite(ADS1292_REG_RLDSENS, 0b00101100,chipSelect);	//RLD settings: fmod/16, RLD enabled, RLD inputs from Ch2 only
-  delay(10);
+  bsp_porting_delay(10);
   ads1292RegWrite(ADS1292_REG_LOFFSENS, 0x00,chipSelect);		//LOFF settings: all disabled
-  delay(10);													//Skip register 8, LOFF Settings default
+  bsp_porting_delay(10);													//Skip register 8, LOFF Settings default
   ads1292RegWrite(ADS1292_REG_RESP1, 0b11110010,chipSelect);		//Respiration: MOD/DEMOD turned only, phase 0
-  delay(10);
+  bsp_porting_delay(10);
   ads1292RegWrite(ADS1292_REG_RESP2, 0b00000011,chipSelect);		//Respiration: Calib OFF, respiration freq defaults
-  delay(10);
+  bsp_porting_delay(10);
   ads1292StartReadDataContinuous(chipSelect);
-  delay(10);
+  bsp_porting_delay(10);
   ads1292EnableStart(startPin);
 }
 
 void ads1292Reset(const int pwdnPin)
 {
-  digitalWrite(pwdnPin, HIGH);
-  delay(100);					// Wait 100 mSec
-  digitalWrite(pwdnPin, LOW);
-  delay(100);
-  digitalWrite(pwdnPin, HIGH);
-  delay(100);
+  bsp_porting_write_pin(pwdnPin, true);
+  bsp_porting_delay(100);					// Wait 100 mSec
+  bsp_porting_write_pin(pwdnPin, false);
+  bsp_porting_delay(100);
+  bsp_porting_write_pin(pwdnPin, true);
+  bsp_porting_delay(100);
 }
 
 void ads1292DisableStart(const int startPin)
 {
-  digitalWrite(startPin, LOW);
-  delay(20);
+  bsp_porting_write_pin(startPin, false);
+  bsp_porting_delay(20);
 }
 
 void ads1292EnableStart(const int startPin)
 {
-  digitalWrite(startPin, HIGH);
-  delay(20);
+  bsp_porting_write_pin(startPin, true);
+  bsp_porting_delay(20);
 }
 
 void ads1292HardStop (const int startPin)
 {
-  digitalWrite(startPin, LOW);
-  delay(100);
+  bsp_porting_write_pin(startPin, false);
+  bsp_porting_delay(100);
 }
 
 void ads1292StartDataConvCommand (const int chipSelect)
@@ -197,15 +198,15 @@ void ads1292SPICommandData(unsigned char dataIn,const int chipSelect)
 {
   uint8_t data[1];
   //data[0] = dataIn;
-  digitalWrite(chipSelect, LOW);
-  delay(2);
-  digitalWrite(chipSelect, HIGH);
-  delay(2);
-  digitalWrite(chipSelect, LOW);
-  delay(2);
-  SPI.transfer(dataIn);
-  delay(2);
-  digitalWrite(chipSelect, HIGH);
+  bsp_porting_write_pin(chipSelect, false);
+  bsp_porting_delay(2);
+  bsp_porting_write_pin(chipSelect, true);
+  bsp_porting_delay(2);
+  bsp_porting_write_pin(chipSelect, false);
+  bsp_porting_delay(2);
+  bsp_porting_spi_transfer(dataIn);
+  bsp_porting_delay(2);
+  bsp_porting_write_pin(chipSelect, true);
 }
 
 //Sends a write command to SCP1000
@@ -246,35 +247,35 @@ void ads1292RegWrite (unsigned char READ_WRITE_ADDRESS, unsigned char DATA,const
   }
   // now combine the register address and the command into one uint8_t:
   uint8_t dataToSend = READ_WRITE_ADDRESS | WREG;
-  digitalWrite(chipSelect, LOW);
-  delay(2);
-  digitalWrite(chipSelect, HIGH);
-  delay(2);
+  bsp_porting_write_pin(chipSelect, false);
+  bsp_porting_delay(2);
+  bsp_porting_write_pin(chipSelect, true);
+  bsp_porting_delay(2);
   // take the chip select low to select the device:
-  digitalWrite(chipSelect, LOW);
-  delay(2);
-  SPI.transfer(dataToSend); //Send register location
-  SPI.transfer(0x00);		//number of register to wr
-  SPI.transfer(DATA);		//Send value to record into register
-  delay(2);
+  bsp_porting_write_pin(chipSelect, false);
+  bsp_porting_delay(2);
+  bsp_porting_spi_transfer(dataToSend); //Send register location
+  bsp_porting_spi_transfer(0x00);		//number of register to wr
+  bsp_porting_spi_transfer(DATA);		//Send value to record into register
+  bsp_porting_delay(2);
   // take the chip select high to de-select:
-  digitalWrite(chipSelect, HIGH);
+  bsp_porting_write_pin(chipSelect, true);
 }
 
 void ads1292RegRead(unsigned char READ_ADDRESS, unsigned char *DATA, const int chipSelect)
 {
   uint8_t dataToSend = READ_ADDRESS | RREG;
-  digitalWrite(chipSelect, LOW);
-  delay(2);
-  digitalWrite(chipSelect, HIGH);
-  delay(2);
+  bsp_porting_write_pin(chipSelect, false);
+  bsp_porting_delay(2);
+  bsp_porting_write_pin(chipSelect, true);
+  bsp_porting_delay(2);
   // take the chip select low to select the device:
-  digitalWrite(chipSelect, LOW);
-  delay(2);
-  SPI.transfer(dataToSend); //Send register location
-  SPI.transfer(0x00);		//number of register to wr
-  *DATA = SPI.transfer(0x00);		//Send value to record into register
-  delay(2);
+  bsp_porting_write_pin(chipSelect, false);
+  bsp_porting_delay(2);
+  bsp_porting_spi_transfer(dataToSend); //Send register location
+  bsp_porting_spi_transfer(0x00);		//number of register to wr
+  *DATA = bsp_porting_spi_transfer(0x00);		//Send value to record into register
+  bsp_porting_delay(2);
   // take the chip select high to de-select:
-  digitalWrite(chipSelect, HIGH);
+  bsp_porting_write_pin(chipSelect, true);
 }

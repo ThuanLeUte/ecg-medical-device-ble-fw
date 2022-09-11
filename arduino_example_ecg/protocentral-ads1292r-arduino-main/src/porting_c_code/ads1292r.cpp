@@ -22,7 +22,7 @@
 
 int j,i;
 
-volatile byte SPI_RX_Buff[15] ;
+volatile uint8_t SPI_RX_Buff[15] ;
 volatile static int SPI_RX_Buff_Count = 0;
 volatile char *SPI_RX_Buff_Ptr;
 volatile bool ads1292dataReceived = false;
@@ -195,7 +195,7 @@ void ads1292StopReadDataContinuous (const int chipSelect)
 
 void ads1292SPICommandData(unsigned char dataIn,const int chipSelect)
 {
-  byte data[1];
+  uint8_t data[1];
   //data[0] = dataIn;
   digitalWrite(chipSelect, LOW);
   delay(2);
@@ -244,8 +244,8 @@ void ads1292RegWrite (unsigned char READ_WRITE_ADDRESS, unsigned char DATA,const
     default:
             break;
   }
-  // now combine the register address and the command into one byte:
-  byte dataToSend = READ_WRITE_ADDRESS | WREG;
+  // now combine the register address and the command into one uint8_t:
+  uint8_t dataToSend = READ_WRITE_ADDRESS | WREG;
   digitalWrite(chipSelect, LOW);
   delay(2);
   digitalWrite(chipSelect, HIGH);
@@ -263,7 +263,7 @@ void ads1292RegWrite (unsigned char READ_WRITE_ADDRESS, unsigned char DATA,const
 
 void ads1292RegRead(unsigned char READ_ADDRESS, unsigned char *DATA, const int chipSelect)
 {
-  byte dataToSend = READ_ADDRESS | RREG;
+  uint8_t dataToSend = READ_ADDRESS | RREG;
   digitalWrite(chipSelect, LOW);
   delay(2);
   digitalWrite(chipSelect, HIGH);

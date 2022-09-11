@@ -58,12 +58,12 @@
 
 typedef struct Record{
   volatile signed long sDaqVals[8];
-  boolean leadoffDetected = true;
+  bool leadoffDetected = true;
   signed long sresultTempResp;
 }ads1292OutputValues;
 
 // Publish
-boolean getAds1292EcgAndRespirationSamples(const int dataReady, const int chipSelect, ads1292OutputValues *ecgRespirationValues);
+bool getAds1292EcgAndRespirationSamples(const int dataReady, const int chipSelect, ads1292OutputValues *ecgRespirationValues);
 void ads1292Init(const int chipSelect, const int pwdnPin, const int startPin);
 void ads1292Reset(const int pwdnPin);
 

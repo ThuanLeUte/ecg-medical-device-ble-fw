@@ -16,24 +16,24 @@
 //   Downloaded from Processing IDE Sketch->Import Library->Add Library->G4P Install
 //
 /////////////////////////////////////////////////////////////////////////////////////////
-#include "bsp_porting.h"
+#include "platform.h"
 
-bool bsp_porting_read_pin(uint8_t pin)
+bool platform_read_pin(uint8_t pin)
 {
   return nrf_gpio_pin_read(pin);
 }
 
-void bsp_porting_write_pin(uint8_t pin, bool enable)
+void platform_write_pin(uint8_t pin, bool enable)
 {
   bsp_gpio_write(pin, enable);
 }
 
-void bsp_porting_delay(uint32_t ms)
+void platform_delay(uint32_t ms)
 {
   bsp_delay_ms(ms);
 }
 
-uint8_t bsp_porting_spi_transfer(uint8_t data)
+uint8_t platform_spi_transfer(uint8_t data)
 {
   static uint8_t receive_data;
 

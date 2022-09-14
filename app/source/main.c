@@ -38,9 +38,7 @@
 #include "bsp.h"
 #include "nrf52832_peripherals.h"
 #include "bsp/bsp_bm.h"
-
-#include "ads1292r.h"
-#include "ecg_res_algo.h"
+#include "bsp_afe.h"
 
 #if defined(UART_PRESENT)
 #include "nrf_uart.h"
@@ -95,6 +93,7 @@ static ble_uuid_t m_adv_uuids[]          =                                      
 };
 
 uint32_t app_time;
+int16_t ecg_value;
 
 /* Private function prototypes ---------------------------------------- */
 static void timers_init(void);
@@ -124,12 +123,6 @@ static void dis_service_init(void);
 
 static void application_timers_start(void);
 
-volatile uint8_t globalHeartRate = 0;
-volatile uint8_t globalRespirationRate = 0;
-
-int16_t ecg_wave_buf, ecg_filter_out;
-int16_t res_wave_buf, resp_filter_out;
-
 /* Function definitions ----------------------------------------------- */
 /**
  * @brief Application main function.
@@ -155,36 +148,15 @@ int main(void)
   // Start execution.
   // application_timers_start();
   // advertising_start();
-  ads1292_init(IO_AFE_CS, IO_AFE_RST, IO_AFE_START);
+  bsp_afe_init();
 
   for (;;)
   {
     NRF_LOG_PROCESS();
 
-    ads1292_output_value_t ecg_values;
-
-    base_status_t ret = ads1292_get_ecg_and_respiration_sample(IO_AFE_DRDY, IO_AFE_CS, &ecg_values);
-    if (ret == BS_OK)
+    if (bsp_afe_get_ecg(&ecg_value) == BS_OK)
     {
-      // Ignore the lower 8 bits out of 24bits
-      ecg_wave_buf = (int16_t)(ecg_values.daq_vals[1] >> 8); 
-      res_wave_buf = (int16_t)(ecg_values.result_temp_resp >> 8);
-
-      if (ecg_values.lead_off_detected == false)
-      {
-        // Filter out the line noise @40Hz cutoff 161 order
-        ECG_ProcessCurrSample(&ecg_wave_buf, &ecg_filter_out);
-
-        // Calculate
-        QRS_Algorithm_Interface(ecg_filter_out, &globalHeartRate);
-      }
-      else
-      {
-        ecg_filter_out = 0;
-        resp_filter_out = 0;
-      }
-
-      NRF_LOG_RAW_INFO("%d\n", ecg_filter_out);
+      NRF_LOG_RAW_INFO("%d\n", ecg_value);
     }
   }
 }

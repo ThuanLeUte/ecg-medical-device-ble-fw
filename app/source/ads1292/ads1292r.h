@@ -20,7 +20,7 @@ extern "C" {
 
 /* Includes ----------------------------------------------------------- */
 #include "bsp/bsp.h"
-#include "bsp_porting.h"
+#include "platform.h"
 
 /* Public defines ----------------------------------------------------- */
 // Register address

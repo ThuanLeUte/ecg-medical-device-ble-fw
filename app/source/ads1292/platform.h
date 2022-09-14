@@ -15,9 +15,9 @@
 
 #include "bsp/bsp.h"
 
-bool bsp_porting_read_pin(uint8_t pin);
-void bsp_porting_write_pin(uint8_t pin, bool enable);
-void bsp_porting_delay(uint32_t ms);
-uint8_t bsp_porting_spi_transfer(uint8_t data);
+bool platform_read_pin(uint8_t pin);
+void platform_write_pin(uint8_t pin, bool enable);
+void platform_delay(uint32_t ms);
+uint8_t platform_spi_transfer(uint8_t data);
 
 #endif

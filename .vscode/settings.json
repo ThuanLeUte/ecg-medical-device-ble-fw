@@ -4,6 +4,7 @@
         "bsp.h": "c",
         "ads1292_def.h": "c",
         "bsp_bm.h": "c",
-        "bsp_porting.h": "c"
+        "platform.h": "c",
+        "bsp_afe.h": "c"
     }
 }

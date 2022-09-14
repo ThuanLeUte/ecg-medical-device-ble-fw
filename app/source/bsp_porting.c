@@ -20,8 +20,6 @@
 
 bool bsp_porting_read_pin(uint8_t pin)
 {
-  // return digitalRead(pin);
-
   return nrf_gpio_pin_read(pin);
 }
 
@@ -33,8 +31,6 @@ void bsp_porting_write_pin(uint8_t pin, bool enable)
 void bsp_porting_delay(uint32_t ms)
 {
   bsp_delay_ms(ms);
-
-  // delay(ms);
 }
 
 uint8_t bsp_porting_spi_transfer(uint8_t data)
@@ -44,7 +40,5 @@ uint8_t bsp_porting_spi_transfer(uint8_t data)
   bsp_spi_transmit_receive(&data, &receive_data, 1);
 
   return receive_data;
-
-  // return SPI.transfer(data);
 }
 

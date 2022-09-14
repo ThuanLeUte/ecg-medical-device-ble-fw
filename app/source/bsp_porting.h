@@ -1,21 +1,15 @@
-//////////////////////////////////////////////////////////////////////////////////////////
-//
-//   Arduino Library for ADS1292R Shield/Breakout
-//
-//   Copyright (c) 2017 ProtoCentral
-//
-//   This software is licensed under the MIT License(http://opensource.org/licenses/MIT).
-//
-//   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
-//   NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-//   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-//   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-//   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
-//   Requires g4p_control graphing library for processing.  Built on V4.1
-//   Downloaded from Processing IDE Sketch->Import Library->Add Library->G4P Install
-//
-/////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @file       bsp.h
+ * @copyright  Copyright (C) 2020 Hydratech. All rights reserved.
+ * @license    This project is released under the Hydratech License.
+ * @version    1.0.0
+ * @date       2021-01-23
+ * @author     Thuan Le
+ * @brief      Board Support Package (BSP)
+ * @note       None
+ * @example    None
+ */
+
 #ifndef BSP_PORTING_H
 #define BSP_PORTING_H
 

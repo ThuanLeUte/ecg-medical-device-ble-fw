@@ -399,19 +399,9 @@
               <FilePath>..\source\bsp\bsp.c</FilePath>
             </File>
             <File>
-              <FileName>bsp_afe.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\source\bsp\bsp_afe.c</FilePath>
-            </File>
-            <File>
               <FileName>bsp_bm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\source\bsp\bsp_bm.c</FilePath>
-            </File>
-            <File>
-              <FileName>ads1292.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\source\components\ads1292.c</FilePath>
             </File>
             <File>
               <FileName>ds2728.c</FileName>
@@ -4076,19 +4066,9 @@
               <FilePath>..\source\bsp\bsp.c</FilePath>
             </File>
             <File>
-              <FileName>bsp_afe.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\source\bsp\bsp_afe.c</FilePath>
-            </File>
-            <File>
               <FileName>bsp_bm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\source\bsp\bsp_bm.c</FilePath>
-            </File>
-            <File>
-              <FileName>ads1292.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\source\components\ads1292.c</FilePath>
             </File>
             <File>
               <FileName>ds2728.c</FileName>

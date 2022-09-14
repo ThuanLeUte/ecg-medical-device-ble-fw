@@ -127,8 +127,8 @@ static void application_timers_start(void);
 volatile uint8_t globalHeartRate = 0;
 volatile uint8_t globalRespirationRate = 0;
 
-int16_t ecgWaveBuff, ecgFilterout;
-int16_t resWaveBuff, respFilterout;
+int16_t ecg_wave_buf, ecg_filter_out;
+int16_t res_wave_buf, resp_filter_out;
 
 /* Function definitions ----------------------------------------------- */
 /**
@@ -155,33 +155,36 @@ int main(void)
   // Start execution.
   // application_timers_start();
   // advertising_start();
-  ads1292Init(IO_AFE_CS, IO_AFE_RST, IO_AFE_START);
+  ads1292_init(IO_AFE_CS, IO_AFE_RST, IO_AFE_START);
 
   for (;;)
   {
     NRF_LOG_PROCESS();
 
-    ads1292OutputValues ecgRespirationValues;
+    ads1292_output_value_t ecg_values;
 
-    bool ret = getAds1292EcgAndRespirationSamples(IO_AFE_DRDY, IO_AFE_CS, &ecgRespirationValues);
-    if (ret == true)
+    base_status_t ret = ads1292_get_ecg_and_respiration_sample(IO_AFE_DRDY, IO_AFE_CS, &ecg_values);
+    if (ret == BS_OK)
     {
-      ecgWaveBuff = (int16_t)(ecgRespirationValues.sDaqVals[1] >> 8); // ignore the lower 8 bits out of 24bits
-      resWaveBuff = (int16_t)(ecgRespirationValues.sresultTempResp >> 8);
+      // Ignore the lower 8 bits out of 24bits
+      ecg_wave_buf = (int16_t)(ecg_values.daq_vals[1] >> 8); 
+      res_wave_buf = (int16_t)(ecg_values.result_temp_resp >> 8);
 
-      if (ecgRespirationValues.leadoffDetected == false)
+      if (ecg_values.lead_off_detected == false)
       {
-        ECG_ProcessCurrSample(&ecgWaveBuff, &ecgFilterout);      // filter out the line noise @40Hz cutoff 161 order
-        QRS_Algorithm_Interface(ecgFilterout, &globalHeartRate); // calculate
+        // Filter out the line noise @40Hz cutoff 161 order
+        ECG_ProcessCurrSample(&ecg_wave_buf, &ecg_filter_out);
+
+        // Calculate
+        QRS_Algorithm_Interface(ecg_filter_out, &globalHeartRate);
       }
       else
       {
-        ecgFilterout = 0;
-        respFilterout = 0;
+        ecg_filter_out = 0;
+        resp_filter_out = 0;
       }
 
-      // Serial.println(ecgFilterout);
-      NRF_LOG_RAW_INFO("%d\n", ecgFilterout);
+      NRF_LOG_RAW_INFO("%d\n", ecg_filter_out);
     }
   }
 }

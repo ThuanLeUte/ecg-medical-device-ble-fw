@@ -19,8 +19,6 @@
 #ifndef BSP_PORTING_H
 #define BSP_PORTING_H
 
-// #include "Arduino.h"
-// #include <SPI.h>
 #include "bsp/bsp.h"
 
 bool bsp_porting_read_pin(uint8_t pin);

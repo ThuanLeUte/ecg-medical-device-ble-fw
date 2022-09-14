@@ -144,18 +144,9 @@ int bsp_spi_transmit_receive(uint8_t *tx_data, uint8_t *rx_data, uint16_t len);
  * @return        None
  */
 void bsp_delay_ms(uint32_t ms);
-
-/**
- * @brief         GPIO write
- *
- * @param[in]     pin       Gpio pin
- * @param[in]     state     State
- *
- * @attention     None
- *
- * @return        None
- */
 void bsp_gpio_write(uint8_t pin , uint8_t state);
+
+
 
 /* -------------------------------------------------------------------------- */
 #ifdef __cplusplus

@@ -24,7 +24,7 @@
 #define ADS1292_CMD_RDATAC                  (0x10) // Enable Read Data Continuous mode (default mode at power-up)
 #define ADS1292_CMD_SDATAC                  (0x11) // Stop Read Data Continuous mode
 #define ADS1292_CMD_RDATA                   (0x12) // Read data by command; Supports multiple read back
-#define ADS1292_CMD_RREG                    (0x20) // (also = 00100000) is the first opcode that the address must be added to for RREG communication
+#define ADS1292_CMD_RREG                    (0x20) // (also = 00100000) is the first opcode that the address must be added to for ADS1292_CMD_RREG communication
 #define ADS1292_CMD_WREG                    (0x40) // 01000000 in binary (Datasheet, pg. 35)
 
 #define ADS1292_ID_ADS1292R                 (0x73)

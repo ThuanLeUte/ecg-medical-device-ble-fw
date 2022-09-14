@@ -1,83 +1,76 @@
-//////////////////////////////////////////////////////////////////////////////////////////
-//
-//   Arduino Library for ADS1292R Shield/Breakout
-//
-//   Copyright (c) 2017 ProtoCentral
-//
-//   This software is licensed under the MIT License(http://opensource.org/licenses/MIT).
-//
-//   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
-//   NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-//   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-//   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-//   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
-//   Requires g4p_control graphing library for processing.  Built on V4.1
-//   Downloaded from Processing IDE Sketch->Import Library->Add Library->G4P Install
-//
-/////////////////////////////////////////////////////////////////////////////////////////
-#ifndef ads1292r_h
-#define ads1292r_h
+/**
+ * @file       ads1292r.h
+ * @copyright  Copyright (C) 2020 Hydratech. All rights reserved.
+ * @license    This project is released under the Hydratech License.
+ * @version    1.0.0
+ * @date       2021-07-31
+ * @author     Thuan Le
+ * @brief      Driver support ADS1292R (Analog Front-End for Biopotential Measurements)
+ * @note       None
+ * @example    None
+ */
 
+/* Define to prevent recursive inclusion ------------------------------ */
+#ifndef __ADS1292R_H
+#define __ADS1292R_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Includes ----------------------------------------------------------- */
+#include "bsp/bsp.h"
 #include "bsp_porting.h"
 
-#define CONFIG_SPI_MASTER_DUMMY   0xFF
+/* Public defines ----------------------------------------------------- */
+// Register address
+#define ADS1292_REG_ID          (0x00)
+#define ADS1292_REG_CONFIG1     (0x01)
+#define ADS1292_REG_CONFIG2     (0x02)
+#define ADS1292_REG_LOFF        (0x03)
+#define ADS1292_REG_CH1SET      (0x04)
+#define ADS1292_REG_CH2SET      (0x05)
+#define ADS1292_REG_RLDSENS     (0x06)
+#define ADS1292_REG_LOFFSENS    (0x07)
+#define ADS1292_REG_LOFFSTAT    (0x08)
+#define ADS1292_REG_RESP1       (0x09)
+#define ADS1292_REG_RESP2       (0x0A)
 
-// Register Read Commands
-#define RREG  0x20;		//Read n nnnn registers starting at address r rrrr
-                      //first byte 001r rrrr (2xh)(2) - second byte 000n nnnn(2)
-#define WREG  0x40;	  //Write n nnnn registers starting at address r rrrr
-                      //first byte 010r rrrr (2xh)(2) - second byte 000n nnnn(2)
-#define START	0x08		//Start/restart (synchronize) conversions
-#define STOP	0x0A		//Stop conversion
-#define RDATAC 0x10		//Enable Read Data Continuous mode.
+// Register commands
+#define ADS1292_CMD_WAKEUP      (0x02) // Wake-up from standby mode
+#define ADS1292_CMD_STANDBY     (0x04) // Enter Standby mode
+#define ADS1292_CMD_RESET       (0x06) // Reset the device
+#define ADS1292_CMD_START       (0x08) // Start and restart (synchronize) conversions
+#define ADS1292_CMD_STOP        (0x0A) // Stop conversion
+#define ADS1292_CMD_RDATAC      (0x10) // Enable Read Data Continuous mode (default mode at power-up)
+#define ADS1292_CMD_SDATAC      (0x11) // Stop Read Data Continuous mode
+#define ADS1292_CMD_RDATA       (0x12) // Read data by command; Supports multiple read back
+#define ADS1292_CMD_RREG        (0x20) // (also = 00100000) is the first opcode that the address must be added to for ADS1292_CMD_RREG communication
+#define ADS1292_CMD_WREG        (0x40) // 01000000 in binary (Datasheet, pg. 35)
 
-//This mode is the default mode at power-up.
-#define SDATAC 0x11		//Stop Read Data Continuously mode
-#define RDATA	0x12		//Read data by command; supports multiple read back.
+#define CONFIG_SPI_MASTER_DUMMY (0xFF)
 
-//register address
-#define ADS1292_REG_ID			  0x00
-#define ADS1292_REG_CONFIG1		0x01
-#define ADS1292_REG_CONFIG2		0x02
-#define ADS1292_REG_LOFF		  0x03
-#define ADS1292_REG_CH1SET		0x04
-#define ADS1292_REG_CH2SET		0x05
-#define ADS1292_REG_RLDSENS		0x06
-#define ADS1292_REG_LOFFSENS  0x07
-#define ADS1292_REG_LOFFSTAT  0x08
-#define ADS1292_REG_RESP1	    0x09
-#define ADS1292_REG_RESP2	    0x0A
+/* Public enumerate/structure ----------------------------------------- */
+/**
+ * @brief ADS1292 sensor data struct
+ */
+typedef struct
+{
+  volatile signed long daq_vals[8];
+  bool lead_off_detected;
+  signed long result_temp_resp;
+}
+ads1292_output_value_t;
 
-//Packet format
-#define  CES_CMDIF_PKT_START_1   0x0A
-#define  CES_CMDIF_PKT_START_2   0xFA
-#define  CES_CMDIF_TYPE_DATA     0x02
-#define  CES_CMDIF_PKT_STOP_1    0x00
-#define  CES_CMDIF_PKT_STOP_2    0x0B
+/* Public function prototypes ----------------------------------------- */
+base_status_t ads1292_get_ecg_and_respiration_sample(const int data_ready, const int chip_select, ads1292_output_value_t *data_sample);
+base_status_t ads1292_init(const int chip_select, const int pwdn_pin, const int start_pin);
 
-typedef struct Record{
-  volatile signed long sDaqVals[8];
-  bool leadoffDetected;
-  signed long sresultTempResp;
-}ads1292OutputValues;
-
-// Publish
-bool getAds1292EcgAndRespirationSamples(const int dataReady, const int chipSelect, ads1292OutputValues *ecgRespirationValues);
-void ads1292Init(const int chipSelect, const int pwdnPin, const int startPin);
-void ads1292Reset(const int pwdnPin);
-
-// Private
-void ads1292RegWrite(unsigned char READ_WRITE_ADDRESS, unsigned char DATA, const int chipSelect);
-void ads1292SPICommandData(unsigned char dataIn, const int chipSelect);
-void ads1292DisableStart(const int startPin);
-void ads1292EnableStart(const int startPin);
-void ads1292HardStop(const int startPin);
-void ads1292StartDataConvCommand(const int chipSelect);
-void ads1292SoftStop(const int chipSelect);
-void ads1292StartReadDataContinuous(const int chipSelect);
-void ads1292StopReadDataContinuous(const int chipSelect);
-char *ads1292ReadData(const int chipSelect);
-void ads1292RegRead(unsigned char READ_ADDRESS, unsigned char *DATA, const int chipSelect);
-
+/* -------------------------------------------------------------------------- */
+#ifdef __cplusplus
+} // extern "C"
 #endif
+#endif // __ADS1292R_H
+
+/* End of file -------------------------------------------------------- */
+

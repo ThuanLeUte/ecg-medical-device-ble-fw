@@ -1,23 +1,25 @@
-//////////////////////////////////////////////////////////////////////////////////////////
-//
-//   Arduino Library for ADS1292R Shield/Breakout
-//
-//   Copyright (c) 2017 ProtoCentral
-//
-//   This software is licensed under the MIT License(http://opensource.org/licenses/MIT).
-//
-//   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
-//   NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-//   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-//   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-//   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
-//   Requires g4p_control graphing library for processing.  Built on V4.1
-//   Downloaded from Processing IDE Sketch->Import Library->Add Library->G4P Install
-//
-/////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @file       platform.c
+ * @copyright  Copyright (C) 2020 Hydratech. All rights reserved.
+ * @license    This project is released under the Hydratech License.
+ * @version    1.0.0
+ * @date       2021-09-05
+ * @author     Thuan Le
+ * @brief      Platform
+ * @note       None
+ * @example    None
+ */
+
+/* Includes ----------------------------------------------------------- */
 #include "platform.h"
 
+/* Private defines ---------------------------------------------------- */
+/* Private enumerate/structure ---------------------------------------- */
+/* Private macros ----------------------------------------------------- */
+/* Public variables --------------------------------------------------- */
+/* Private variables -------------------------------------------------- */
+/* Private function prototypes ---------------------------------------- */
+/* Function definitions ----------------------------------------------- */
 bool platform_read_pin(uint8_t pin)
 {
   return nrf_gpio_pin_read(pin);
@@ -41,4 +43,7 @@ uint8_t platform_spi_transfer(uint8_t data)
 
   return receive_data;
 }
+
+/* Private function definitions ---------------------------------------- */
+/* End of file -------------------------------------------------------- */
 

@@ -23,7 +23,7 @@
 static ads1293_t m_ads1293;
 
 /* Private function prototypes ---------------------------------------- */
-static base_status_t m_bsp_afe_read_channels(int32_t value[ADS_NUM_CHANNEL]);
+static base_status_t m_bsp_afe_read_channels(int16_t value[ADS_NUM_CHANNEL]);
 
 /* Function definitions ----------------------------------------------- */
 base_status_t bsp_afe_init(void)
@@ -38,7 +38,7 @@ base_status_t bsp_afe_init(void)
   return BS_OK;
 }
 
-base_status_t bsp_afe_get_ecg(int32_t value[ADS_NUM_CHANNEL])
+base_status_t bsp_afe_get_ecg(int16_t value[ADS_NUM_CHANNEL])
 {
   m_bsp_afe_read_channels(value);
 
@@ -57,7 +57,7 @@ base_status_t bsp_afe_get_ecg(int32_t value[ADS_NUM_CHANNEL])
  * - BS_OK
  * - BS_ERROR
  */
-static base_status_t m_bsp_afe_read_channels(int32_t value[ADS_NUM_CHANNEL])
+static base_status_t m_bsp_afe_read_channels(int16_t value[ADS_NUM_CHANNEL])
 {
   uint8_t r[ADS_NUM_CHANNEL * 3];
   int32_t i[ADS_NUM_CHANNEL];
@@ -79,12 +79,12 @@ static base_status_t m_bsp_afe_read_channels(int32_t value[ADS_NUM_CHANNEL])
     m_ads1293_read_reg(&m_ads1293, 0x38, &x2, 1);
     m_ads1293_read_reg(&m_ads1293, 0x39, &x3, 1);
 
-    uint32_t tempData = (uint32_t)x1 << 16;
-    tempData |= (uint32_t)x2 << 8;
+    int32_t tempData = (int32_t)x1 << 16;
+    tempData |= (int32_t)x2 << 8;
     tempData |= x3;
-    // tempData = tempData << 8;
+    tempData = tempData >> 8;
 
-    value[0] = tempData;
+    value[0] = (int16_t)tempData;
   }
 
   return BS_OK;

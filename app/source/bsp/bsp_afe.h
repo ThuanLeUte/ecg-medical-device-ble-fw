@@ -50,7 +50,7 @@ base_status_t bsp_afe_init(void);
  * - BS_OK
  * - BS_ERROR
  */
-base_status_t bsp_afe_get_ecg(int32_t value[ADS_NUM_CHANNEL]);
+base_status_t bsp_afe_get_ecg(int16_t value[ADS_NUM_CHANNEL]);
 
 /* -------------------------------------------------------------------------- */
 #ifdef __cplusplus

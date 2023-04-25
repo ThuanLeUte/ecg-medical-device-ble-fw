@@ -151,7 +151,7 @@ int main(void)
   application_timers_start();
 //  advertising_start();
 
-  int32_t signal_val[ADS_NUM_CHANNEL];
+  int16_t signal_val[ADS_NUM_CHANNEL];
   int16_t ecg_channel_buf[200];
   int16_t index = 0;
 
@@ -163,19 +163,16 @@ int main(void)
     {
       bsp_afe_get_ecg(signal_val);
 
-      // ecg_channel_buf[index]     = signal_val[0];
-      // ecg_channel_buf[index + 1] = signal_val[1];
-      
-      // NRF_LOG_RAW_INFO("%d,%d,\n", signal_val[0], signal_val[1]);
       NRF_LOG_RAW_INFO("%d\n", signal_val[0]);
 
-      index += 2;
+      // ecg_channel_buf[index]
 
-      if (index >= 100)
-      {
-        index = 0;
-//        ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf, 200, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_CHAR);
-      }
+      // index += 2;
+      // if (index >= 100)
+      // {
+      //   index = 0;
+      //   ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf, 200, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_CHAR);
+      // }
     }
   }
 }
@@ -811,11 +808,11 @@ static void battery_level_update(void)
 {
   uint8_t battery_level;
 
-  bsp_bm_get_soc(&battery_level);
+  // bsp_bm_get_soc(&battery_level);
 
 //  NRF_LOG_INFO("Battery avg : %d percent", battery_level);
 
-  ble_bas_battery_level_update(&m_bas, battery_level, BLE_CONN_HANDLE_ALL);
+  // ble_bas_battery_level_update(&m_bas, battery_level, BLE_CONN_HANDLE_ALL);
 }
 
 /**

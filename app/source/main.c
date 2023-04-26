@@ -74,6 +74,7 @@
 #define MAX_CONN_PARAMS_UPDATE_COUNT    3                                           /**< Number of attempts before giving up the connection parameter negotiation. */
 
 #define DEAD_BEEF                       0xDEADBEEF                                  /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
+#define ECG_BLE_SEND_MAX_SAMPLE                 120
 
 /* Private macros ----------------------------------------------------- */
 BLE_ECG_DEF(m_ecg);                                                                 /**< BLE ECG service instance. */
@@ -149,10 +150,10 @@ int main(void)
 
   // Start execution.
   application_timers_start();
-//  advertising_start();
+ advertising_start();
 
   int16_t signal_val[ADS_NUM_CHANNEL];
-  int16_t ecg_channel_buf[200];
+  int16_t ecg_channel_buf[300];
   int16_t index = 0;
 
   for (;;)
@@ -165,14 +166,14 @@ int main(void)
 
       NRF_LOG_RAW_INFO("%d\n", signal_val[0]);
 
-      // ecg_channel_buf[index]
+      ecg_channel_buf[index] = signal_val[0];
 
-      // index += 2;
-      // if (index >= 100)
-      // {
-      //   index = 0;
-      //   ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf, 200, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_CHAR);
-      // }
+      index++;
+      if (index >= ECG_BLE_SEND_MAX_SAMPLE)
+      {
+        index = 0;
+        ble_ecg_update(&m_ecg, (uint8_t *)&ecg_channel_buf, ECG_BLE_SEND_MAX_SAMPLE * 2, BLE_CONN_HANDLE_ALL, BLE_ECG_CHANNEL_CHAR);
+      }
     }
   }
 }
